@@ -1,0 +1,57 @@
+///$tab sublib.logg
+// SUB sublib.logg
+// 	TRACE Initierar SUB sublib.logg.
+//     Använd sublib.logg.start för att starta loggning.
+//     Använd sublib.logg.stop för att avsluta senaste loggning.;
+        
+    SUB sublib.logg.start (_sublib.logg.loggrubrik, _sublib.logg.loggbeskrivning)
+    	LET vL.sublib.logg.loggnivå= alt(vL.sublib.logg.loggnivå+1, 0);
+     	LoggEvent:
+      	LOAD 
+        	AutoNumberHash256(now(),'$(_sublib.logg.loggrubrik)') as [Logg-ID],
+            $(vL.sublib.logg.loggnivå) as [Loggnivå],
+            '$(_sublib.logg.loggrubrik)' as [Loggrubrik],
+          	'$(_sublib.logg.loggbeskrivning)' as Loggbeskrivning,
+          	Now() as [Logg starttid],
+          	Timestamp(null()) as [Logg stoptid]
+      	AutoGenerate 1;
+        SET _sublib.logg.loggrubrik=;
+        SET _sublib.logg.loggbeskrivning=;
+  	ENDSUB //logg.start
+
+  	SUB sublib.logg.stop
+		TmpLoggEvent:      
+       	NoConcatenate
+      	LOAD
+        	[Logg-ID],
+          	[Loggnivå], 
+          	[Loggrubrik], 
+          	Loggbeskrivning,
+          	[Logg starttid], 
+          	timestamp(now()) as [Logg stoptid]
+      	Resident LoggEvent 
+      	Where 
+          	[Loggnivå] = $(vL.sublib.logg.loggnivå) 
+          	AND isnull( [Logg stoptid]);
+      	Concatenate LOAD 
+          	[Logg-ID],
+          	[Loggnivå],
+          	[Loggrubrik],
+          	Loggbeskrivning,
+          	[Logg starttid],
+          	timestamp([Logg stoptid]) as [Logg stoptid]
+      Resident 
+          LoggEvent
+      Where 
+          NOT ( 
+              [Loggnivå] = $(vL.sublib.logg.loggnivå) 
+              AND isnull( [Logg stoptid])
+              )
+      ;
+  DROP table LoggEvent;
+  RENAME Table TmpLoggEvent to LoggEvent;
+  LET vL.sublib.logg.loggnivå= alt(vL.sublib.logg.loggnivå-1, 0);
+  ENDSUB //logg.stop
+
+
+// endsub //sublib.logg
