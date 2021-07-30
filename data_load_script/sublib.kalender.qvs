@@ -96,19 +96,39 @@ SUB sublib.kalenderfrånfält (vL.kalender.nyckelfält, _källa, _calendarPrefix
 	IF len('$(_källa)')=0 THEN
 		SET vL.kalender.minmaxkälla = ";LOAD FieldValue('$(vL.kalender.nyckelfält)', recno()) as [$(vL.kalender.nyckelfält)] 
 										AUTOGENERATE FieldValueCount('$(vL.kalender.nyckelfält)')";
+        kalender.minmaxtabell:
+		LOAD
+			max([$(vL.kalender.nyckelfält)])+0 as tempKalender.maxdatum,
+			min([$(vL.kalender.nyckelfält)])+0 as tempKalender.mindatum	;
+        LOAD 
+        	FieldValue('$(vL.kalender.nyckelfält)', recno()) as [$(vL.kalender.nyckelfält)] 
+		AUTOGENERATE FieldValueCount('$(vL.kalender.nyckelfält)');
+
 	ELSEIF index('$(_källa)', '.') = 0 THEN
 		SET vL.kalender.minmaxkälla = 'RESIDENT $(_källa)';
+		kalender.minmaxtabell:
+		LOAD
+			max([$(vL.kalender.nyckelfält)])+0 as tempKalender.maxdatum,
+			min([$(vL.kalender.nyckelfält)])+0 as tempKalender.mindatum	
+        RESIDENT $(_källa);
+
 	ELSEIF '.qvd' = lower(right('$(_källa)', 4)) THEN
 		SET vL.kalender.minmaxkälla = 'FROM $(_källa) (qvd)';
-	ELSE
-		SET vL.kalender.minmaxkälla = 'FROM $(_källa)';	// Assume text file
-	ENDIF
+        kalender.minmaxtabell:
+		LOAD
+			max([$(vL.kalender.nyckelfält)])+0 as tempKalender.maxdatum,
+			min([$(vL.kalender.nyckelfält)])+0 as tempKalender.mindatum	
+        FROM $(_källa) (qvd);
 
-	kalender.minmaxtabell:
-	LOAD
-		max([$(vL.kalender.nyckelfält)])+0 as tempKalender.maxdatum,
-		min([$(vL.kalender.nyckelfält)])+0 as tempKalender.mindatum	
-	$(vL.kalender.minmaxkälla);
+	ELSE
+		SET vL.kalender.minmaxkälla = 'FROM $(_källa)';	// Antar text fil
+        kalender.minmaxtabell:
+		LOAD
+			max([$(vL.kalender.nyckelfält)])+0 as tempKalender.maxdatum,
+			min([$(vL.kalender.nyckelfält)])+0 as tempKalender.mindatum	
+        FROM $(_källa);
+
+	ENDIF
 
 	LET vL.kalender.minmaxkälla =;
 	// Byter ut europeisk decimalseperator  ',' så att qlikview förstår att det är ett värde.
