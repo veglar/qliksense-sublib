@@ -1,0 +1,15 @@
+{
+  "qInfo": {
+    "qId": "bceb8d17-76cd-4f64-b9eb-d6ac356d4f36",
+    "qType": "variable"
+  },
+  "qMetaDef": {},
+  "qName": "vL.sublib.kalender.idag",
+  "qNumberPresentation": {
+    "qType": "U",
+    "qnDec": 10,
+    "qUseThou": 0
+  },
+  "qDefinition": "2022-08-28",
+  "qIsScriptCreated": true
+}

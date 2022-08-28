@@ -63,9 +63,9 @@ Skapa kalender från ett angett min- och max-datum
 		Date('$(_maxKalenderdatum)') - Date('$(_minKalenderdatum)') + 1;
 
 
-	SET vL.SetModifier.CleanCalender = År, Månad, Datum, [År-månad],Veckodag,Vecka,Kvartal,År-kvartal, [Historik/Framtid];
+	SET vL.SetModifier.CleanCalender = År, Månad, Datum, [År-månad],Veckodag,Vecka,Kvartal,[År-kvartal], [Historik/Framtid];
 
-
+	
 	// Year To Date Modifier
 	Let vL.SetModifier.YTD = 
 	replace(

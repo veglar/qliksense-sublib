@@ -18,31 +18,3 @@ SET LongMonthNames='January;February;March;April;May;June;July;August;September;
 SET DayNames='Mon;Tue;Wed;Thu;Fri;Sat;Sun';
 SET LongDayNames='Monday;Tuesday;Wednesday;Thursday;Friday;Saturday;Sunday';
 SET NumericalAbbreviation='3:k;6:M;9:G;12:T;15:P;18:E;21:Z;24:Y;-3:m;-6:μ;-9:n;-12:p;-15:f;-18:a;-21:z;-24:y';
-
-
-SUB test.sublib.logg
-call sublib.logg.start('A','Loggar A1')
-  sleep(1000);
-  call sublib.logg.start('Loggar A1')
-    sleep(1000);
-    call sublib.logg.start('Loggar A2')
-    call sublib.logg.start('Loggar A21')
-      sleep(1000);
-      call sublib.logg.stop
-      call sublib.logg.start('Loggar A3')
-        sleep(1000);
-        call sublib.logg.stop
-         call sublib.logg.start('Loggar A3')
-        sleep(1000);
-        call sublib.logg.stop
-      call sublib.logg.start('Loggar A4')
-        sleep(1000);
-        call sublib.logg.stop
-      call sublib.logg.stop
-    call sublib.logg.stop
-  call sublib.logg.start('Loggar A5')
-    sleep(1000);
-    call sublib.logg.stop
-  call sublib.logg.stop
-
-ENDSUB //test-sublib-logg
