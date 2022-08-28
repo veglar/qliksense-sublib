@@ -1,9 +1,5 @@
 ///$tab sublib.logg
-// SUB sublib.logg
-// 	TRACE Initierar SUB sublib.logg.
-//     Använd sublib.logg.start för att starta loggning.
-//     Använd sublib.logg.stop för att avsluta senaste loggning.;
-        
+       
     SUB sublib.logg.start (_sublib.logg.loggrubrik, _sublib.logg.loggbeskrivning)
     	LET vL.sublib.logg.loggnivå= alt(vL.sublib.logg.loggnivå+1, 0);
      	LoggEvent:
@@ -52,6 +48,3 @@
   RENAME Table TmpLoggEvent to LoggEvent;
   LET vL.sublib.logg.loggnivå= alt(vL.sublib.logg.loggnivå-1, 0);
   ENDSUB //logg.stop
-
-
-// endsub //sublib.logg
