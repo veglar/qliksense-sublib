@@ -1,0 +1,62 @@
+[
+  {
+    "qName": "Logg starttid",
+    "qTags": [
+      "$numeric",
+      "$timestamp"
+    ],
+    "qSrcTables": [
+      "LoggEvent"
+    ]
+  },
+  {
+    "qName": "Logg stoptid",
+    "qTags": [
+      "$numeric",
+      "$timestamp"
+    ],
+    "qSrcTables": [
+      "LoggEvent"
+    ]
+  },
+  {
+    "qName": "Logg-ID",
+    "qTags": [
+      "$numeric",
+      "$integer"
+    ],
+    "qSrcTables": [
+      "LoggEvent"
+    ]
+  },
+  {
+    "qName": "Loggbeskrivning",
+    "qTags": [
+      "$text",
+      "$ascii"
+    ],
+    "qSrcTables": [
+      "LoggEvent"
+    ]
+  },
+  {
+    "qName": "Loggnivå",
+    "qTags": [
+      "$numeric",
+      "$integer"
+    ],
+    "qSrcTables": [
+      "LoggEvent"
+    ]
+  },
+  {
+    "qName": "Loggrubrik",
+    "qTags": [
+      "$text",
+      "$ascii"
+    ],
+    "qSrcTables": [
+      "LoggEvent"
+    ]
+  }
+]
