@@ -11,17 +11,13 @@ SET FirstWeekDay=0;
 SET BrokenWeeks=0;
 SET ReferenceDay=4;
 SET FirstMonthOfYear=1;
-SET CollationLocale='en-SE';
+SET CollationLocale='sv-SE';
 SET CreateSearchIndexOnReload=1;
-SET MonthNames='Jan;Feb;Mar;Apr;May;Jun;Jul;Aug;Sep;Oct;Nov;Dec';
-SET LongMonthNames='January;February;March;April;May;June;July;August;September;October;November;December';
-SET DayNames='Mon;Tue;Wed;Thu;Fri;Sat;Sun';
-SET LongDayNames='Monday;Tuesday;Wednesday;Thursday;Friday;Saturday;Sunday';
-SET NumericalAbbreviation='3:k;6:M;9:G;12:T;15:P;18:E;21:Z;24:Y;-3:m;-6:μ;-9:n;-12:p;-15:f;-18:a;-21:z;-24:y';
-
-
-
-///$tab sublib.kalender
+SET MonthNames='jan.;feb.;mars;apr.;maj;juni;juli;aug.;sep.;okt.;nov.;dec.';
+SET LongMonthNames='januari;februari;mars;april;maj;juni;juli;augusti;september;oktober;november;december';
+SET DayNames='mån;tis;ons;tors;fre;lör;sön';
+SET LongDayNames='måndag;tisdag;onsdag;torsdag;fredag;lördag;söndag';
+SET NumericalAbbreviation='3:k;6:M;9:G;12:T;15:P;18:E;21:Z;24:Y;-3:m;-6:μ;-9:n;-12:p;-15:f;-18:a;-21:z;-24:y';///$tab sublib.kalender
 SUB sublib.kalender (_minKalenderdatum, _maxKalenderdatum, _kalendernyckelfält, _calendarPrefix)
 /**
 Skapa kalender från ett angett min- och max-datum
@@ -189,97 +185,3 @@ Skapar länkkalender med fälten,
 			[$(vL.sublib.kalender.faktatabell)]
     ;
 ENDSUB
-///$tab sublib.kalender.test
-SUB sublib.kalender.test
-
-LOAD floor(rand()*720+yearstart(today())) as %testdatum
-AutoGenerate 365;
-
-Call sublib.kalenderfrånfält('%testdatum')
-ENDSUB //sublib.kalender.test
-
-///$tab sublib.logg
-       
-    SUB sublib.logg.start (_sublib.logg.loggrubrik, _sublib.logg.loggbeskrivning)
-    	LET vL.sublib.logg.loggnivå= alt(vL.sublib.logg.loggnivå+1, 0);
-     	LoggEvent:
-      	LOAD 
-        	AutoNumberHash256(now(),'$(_sublib.logg.loggrubrik)') as [Logg-ID],
-            $(vL.sublib.logg.loggnivå) as [Loggnivå],
-            '$(_sublib.logg.loggrubrik)' as [Loggrubrik],
-          	'$(_sublib.logg.loggbeskrivning)' as Loggbeskrivning,
-          	Now() as [Logg starttid],
-          	Timestamp(null()) as [Logg stoptid]
-      	AutoGenerate 1;
-        SET _sublib.logg.loggrubrik=;
-        SET _sublib.logg.loggbeskrivning=;
-  	ENDSUB //logg.start
-
-  	SUB sublib.logg.stop
-		TmpLoggEvent:      
-       	NoConcatenate
-      	LOAD
-        	[Logg-ID],
-          	[Loggnivå], 
-          	[Loggrubrik], 
-          	Loggbeskrivning,
-          	[Logg starttid], 
-          	timestamp(now()) as [Logg stoptid]
-      	Resident LoggEvent 
-      	Where 
-          	[Loggnivå] = $(vL.sublib.logg.loggnivå) 
-          	AND isnull( [Logg stoptid]);
-      	Concatenate LOAD 
-          	[Logg-ID],
-          	[Loggnivå],
-          	[Loggrubrik],
-          	Loggbeskrivning,
-          	[Logg starttid],
-          	timestamp([Logg stoptid]) as [Logg stoptid]
-      Resident 
-          LoggEvent
-      Where 
-          NOT ( 
-              [Loggnivå] = $(vL.sublib.logg.loggnivå) 
-              AND isnull( [Logg stoptid])
-              )
-      ;
-  DROP table LoggEvent;
-  RENAME Table TmpLoggEvent to LoggEvent;
-  LET vL.sublib.logg.loggnivå= alt(vL.sublib.logg.loggnivå-1, 0);
-  ENDSUB //logg.stop
-
-
-
-
-
-
-///$tab sublib.logg.test
-SUB test.sublib.logg
-call sublib.logg.start('A','Loggar A1')
-  sleep(1000);
-  call sublib.logg.start('Loggar A1')
-    sleep(1000);
-    call sublib.logg.start('Loggar A2')
-    call sublib.logg.start('Loggar A21')
-      sleep(1000);
-      call sublib.logg.stop
-      call sublib.logg.start('Loggar A3')
-        sleep(1000);
-        call sublib.logg.stop
-         call sublib.logg.start('Loggar A3')
-        sleep(1000);
-        call sublib.logg.stop
-      call sublib.logg.start('Loggar A4')
-        sleep(1000);
-        call sublib.logg.stop
-      call sublib.logg.stop
-    call sublib.logg.stop
-  call sublib.logg.start('Loggar A5')
-    sleep(1000);
-    call sublib.logg.stop
-  call sublib.logg.stop
-
-ENDSUB //test-sublib-logg
-///$tab RUN
-CALL sublib.kalender.test

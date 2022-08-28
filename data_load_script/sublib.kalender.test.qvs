@@ -1,8 +1,0 @@
-///$tab sublib.kalender.test
-SUB sublib.kalender.test
-
-LOAD floor(rand()*720+yearstart(today())) as %testdatum
-AutoGenerate 365;
-
-Call sublib.kalenderfrånfält('%testdatum')
-ENDSUB //sublib.kalender.test
