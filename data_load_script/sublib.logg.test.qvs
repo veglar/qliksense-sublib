@@ -1,27 +1,30 @@
 ///$tab sublib.logg.test
-SUB test.sublib.logg
-call sublib.logg.start('A','Loggar A1')
+SUB sublib.logg.test  
+call sublib.logg.start('A','Startar sektion A')
   sleep(1000);
-  call sublib.logg.start('Loggar A1')
+  
+  call sublib.logg.start('Loggar undersektion A1')
     sleep(1000);
-    call sublib.logg.start('Loggar A2')
-    call sublib.logg.start('Loggar A21')
-      sleep(1000);
-      call sublib.logg.stop
-      call sublib.logg.start('Loggar A3')
-        sleep(1000);
-        call sublib.logg.stop
-         call sublib.logg.start('Loggar A3')
-        sleep(1000);
-        call sublib.logg.stop
+    call sublib.logg.start('Loggar undersektion A2')
+      For i=1 to 3 step 1
+        call sublib.logg.start('Loop A3','Iteration $(i)')
+          sleep(1000);
+        call sublib.logg.stop  //Stop loop A3 iteration
+      next i
+      SET i=; //Nollställer loopvariabel
+        
       call sublib.logg.start('Loggar A4')
         sleep(1000);
-        call sublib.logg.stop
       call sublib.logg.stop
-    call sublib.logg.stop
-  call sublib.logg.start('Loggar A5')
-    sleep(1000);
+      
     call sublib.logg.stop
   call sublib.logg.stop
+  
+  call sublib.logg.start('Loggar A5')
+    sleep(1000);
+  call sublib.logg.stop
+call sublib.logg.stop
 
+/** Färg som ändras beroende på Loggnivå i gränssnitt*/
+SET vL.logg.bgcolor = Pick(Loggnivå, Red(), Blue(), Yellow(200), Yellow(100), Blue(75), Blue(50), Blue(25));
 ENDSUB //test-sublib-logg

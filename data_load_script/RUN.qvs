@@ -1,2 +1,4 @@
 ///$tab RUN
 CALL sublib.kalender.test
+  
+CALL sublib.logg.test

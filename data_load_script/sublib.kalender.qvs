@@ -18,7 +18,7 @@ Skapa kalender från ett angett min- och max-datum
 	*/
 	LET vL.sublib.kalender.årmånadformat = if(len('$(vL.sublib.kalender.årmånadformat)')=0, 'YYYY MMM', vL.sublib.kalender.årmånadformat);
 	LET vL.sublib.kalender.tabellnamn = if(len('$(vL.sublib.kalender.tabellnamn)')=0, 'Kalender', vL.sublib.kalender.tabellnamn);
-	LET vL.sublib.kalender.idag= if(len('$(vL.sublib.kalender.idag)')=0, today(), date('$(vL.sublib.kalender.idag)'));
+	LET vL.sublib.kalender.idag= ;
 	LET FirstMonthOfYear= if(len('$(FirstMonthOfYear)')=0, 1, FirstMonthOfYear);
     LET ReferenceDay= if(len('$(ReferenceDay)')=0, 1, ReferenceDay);
     LET BrokenWeeks= if(len('$(BrokenWeeks)')=0, 1, BrokenWeeks);
@@ -55,7 +55,7 @@ Skapa kalender från ett angett min- och max-datum
 		'Q'&Num(Ceil(Num(Month(temporärdatum))/3)) 					as [$(_calendarPrefix)Kvartal],
 		Dual('Q'&Ceil(month(temporärdatum)/3) & ' ' &Year(temporärdatum), 
 			 num(QuarterStart(temporärdatum)) )  					as [$(_calendarPrefix)År-kvartal],
-		if(temporärdatum  > '$(vL.sublib.kalender.idag)', 'Framtid', 'Historik') as [Historik/Framtid]
+		if(temporärdatum  > (if(len('$(vL.sublib.kalender.idag)')=0, today(), date('$(vL.sublib.kalender.idag)'))), 'Framtid', 'Historik') as [Historik/Framtid]
 		;
 	LOAD
 		Date('$(_minKalenderdatum)') + RecNo()-1 AS temporärdatum

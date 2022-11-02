@@ -1,0 +1,30 @@
+{
+  "qInfo": {
+    "qId": "DJWRP",
+    "qType": "measure"
+  },
+  "qMeasure": {
+    "qLabel": "max([Logg stoptid])-min([Logg starttid])",
+    "qDef": "max([Logg stoptid])-min([Logg starttid])",
+    "qGrouping": "N",
+    "qExpressions": [],
+    "qActiveExpression": 0,
+    "qNumFormat": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "numFormatFromTemplate": true,
+    "coloring": {
+      "baseColor": {
+        "color": "#10cfc9",
+        "index": 5
+      }
+    }
+  },
+  "qMetaDef": {
+    "title": "max([Logg stoptid])-min([Logg starttid])",
+    "description": "",
+    "tags": []
+  }
+}
