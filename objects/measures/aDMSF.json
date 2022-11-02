@@ -1,0 +1,30 @@
+{
+  "qInfo": {
+    "qId": "aDMSF",
+    "qType": "measure"
+  },
+  "qMeasure": {
+    "qLabel": "[Logg starttid]-min(total [Logg starttid])",
+    "qDef": "[Logg starttid]-min(total [Logg starttid])",
+    "qGrouping": "N",
+    "qExpressions": [],
+    "qActiveExpression": 0,
+    "qNumFormat": {
+      "qType": "U",
+      "qnDec": 10,
+      "qUseThou": 0
+    },
+    "numFormatFromTemplate": true,
+    "coloring": {
+      "baseColor": {
+        "color": "#ffffff",
+        "index": 1
+      }
+    }
+  },
+  "qMetaDef": {
+    "title": "[Logg starttid]-min(total [Logg starttid])",
+    "description": "",
+    "tags": []
+  }
+}
