@@ -11,13 +11,14 @@ SET FirstWeekDay=0;
 SET BrokenWeeks=0;
 SET ReferenceDay=4;
 SET FirstMonthOfYear=1;
-SET CollationLocale='sv-SE';
+SET CollationLocale='en-SE';
 SET CreateSearchIndexOnReload=1;
-SET MonthNames='jan.;feb.;mars;apr.;maj;juni;juli;aug.;sep.;okt.;nov.;dec.';
-SET LongMonthNames='januari;februari;mars;april;maj;juni;juli;augusti;september;oktober;november;december';
-SET DayNames='mån;tis;ons;tors;fre;lör;sön';
-SET LongDayNames='måndag;tisdag;onsdag;torsdag;fredag;lördag;söndag';
-SET NumericalAbbreviation='3:k;6:M;9:G;12:T;15:P;18:E;21:Z;24:Y;-3:m;-6:μ;-9:n;-12:p;-15:f;-18:a;-21:z;-24:y';///$tab sublib.kalender
+SET MonthNames='Jan;Feb;Mar;Apr;May;Jun;Jul;Aug;Sep;Oct;Nov;Dec';
+SET LongMonthNames='January;February;March;April;May;June;July;August;September;October;November;December';
+SET DayNames='Mon;Tue;Wed;Thu;Fri;Sat;Sun';
+SET LongDayNames='Monday;Tuesday;Wednesday;Thursday;Friday;Saturday;Sunday';
+SET NumericalAbbreviation='3:k;6:M;9:G;12:T;15:P;18:E;21:Z;24:Y;-3:m;-6:μ;-9:n;-12:p;-15:f;-18:a;-21:z;-24:y';
+///$tab sublib.kalender
 SUB sublib.kalender (_minKalenderdatum, _maxKalenderdatum, _kalendernyckelfält, _calendarPrefix)
 /**
 Skapa kalender från ett angett min- och max-datum
@@ -37,7 +38,7 @@ Skapa kalender från ett angett min- och max-datum
 	*/
 	LET vL.sublib.kalender.årmånadformat = if(len('$(vL.sublib.kalender.årmånadformat)')=0, 'YYYY MMM', vL.sublib.kalender.årmånadformat);
 	LET vL.sublib.kalender.tabellnamn = if(len('$(vL.sublib.kalender.tabellnamn)')=0, 'Kalender', vL.sublib.kalender.tabellnamn);
-	LET vL.sublib.kalender.idag= if(len('$(vL.sublib.kalender.idag)')=0, today(), date('$(vL.sublib.kalender.idag)'));
+	LET vL.sublib.kalender.idag= ;
 	LET FirstMonthOfYear= if(len('$(FirstMonthOfYear)')=0, 1, FirstMonthOfYear);
     LET ReferenceDay= if(len('$(ReferenceDay)')=0, 1, ReferenceDay);
     LET BrokenWeeks= if(len('$(BrokenWeeks)')=0, 1, BrokenWeeks);
@@ -74,7 +75,7 @@ Skapa kalender från ett angett min- och max-datum
 		'Q'&Num(Ceil(Num(Month(temporärdatum))/3)) 					as [$(_calendarPrefix)Kvartal],
 		Dual('Q'&Ceil(month(temporärdatum)/3) & ' ' &Year(temporärdatum), 
 			 num(QuarterStart(temporärdatum)) )  					as [$(_calendarPrefix)År-kvartal],
-		if(temporärdatum  > '$(vL.sublib.kalender.idag)', 'Framtid', 'Historik') as [Historik/Framtid]
+		if(temporärdatum  > (if(len('$(vL.sublib.kalender.idag)')=0, today(), date('$(vL.sublib.kalender.idag)'))), 'Framtid', 'Historik') as [Historik/Framtid]
 		;
 	LOAD
 		Date('$(_minKalenderdatum)') + RecNo()-1 AS temporärdatum
@@ -185,3 +186,131 @@ Skapar länkkalender med fälten,
 			[$(vL.sublib.kalender.faktatabell)]
     ;
 ENDSUB
+///$tab sublib.kalender.test
+SUB sublib.kalender.test
+
+LOAD floor(rand()*720+yearstart(today())) as %testdatum
+AutoGenerate 365;
+
+Call sublib.kalenderfrånfält('%testdatum')
+ENDSUB //sublib.kalender.test
+///$tab sublib.logg
+ /**
+ Loggfunktioner som sparar ned info om 
+ - Start 
+ - Sluttid
+ - Rubrik
+ - Beskrivning
+ */      
+    SUB sublib.logg.start (_sublib.logg.loggrubrik, _sublib.logg.loggbeskrivning)
+    /**
+    Startar en nytt loggförfarande
+    @param1 [Valfri] Rubrik för loggrad som ska sparas
+    @param2 [Valfri] Beskrivning för loggrad som ska sparas
+    */
+    	
+        /*Skapar eller adderar +1 till vL.sublib.logg.loggnivå för varje iteration*/
+        if isnull(TableNumber('LoggEvent')) OR isnull(vL.sublib.logg.loggnivå) then
+        LET vL.sublib.logg.loggnivå= 1;
+        else 
+        	vL.sublib.logg.loggnivå=vL.sublib.logg.loggnivå+1;
+		endif
+		LoggEvent:
+      	LOAD 
+        	AutoNumberHash256(now(),'$(_sublib.logg.loggrubrik)') as [Logg-ID],
+            $(vL.sublib.logg.loggnivå) as [Loggnivå],
+            '$(_sublib.logg.loggrubrik)' as [Loggrubrik],
+          	'$(_sublib.logg.loggbeskrivning)' as Loggbeskrivning,
+          	Now() as [Logg starttid],
+          	Timestamp(null()) as [Logg stoptid]
+      	AutoGenerate 1;
+        SET _sublib.logg.loggrubrik=;
+        SET _sublib.logg.loggbeskrivning=;
+  	ENDSUB //logg.start
+
+  	SUB sublib.logg.stop
+    /**
+    Stänger senast öppnade loggrad. Loggraden får med detta anropet en [Logg stoptid]
+    */
+		TmpLoggEvent:      
+       	NoConcatenate
+      	LOAD
+        	[Logg-ID],
+          	[Loggnivå], 
+          	[Loggrubrik], 
+          	Loggbeskrivning,
+          	[Logg starttid], 
+          	timestamp(now()) as [Logg stoptid]
+      	Resident LoggEvent 
+      	Where 
+          	[Loggnivå] = $(vL.sublib.logg.loggnivå) 
+          	AND isnull( [Logg stoptid]);
+      	Concatenate LOAD 
+          	[Logg-ID],
+          	[Loggnivå],
+          	[Loggrubrik],
+          	Loggbeskrivning,
+          	[Logg starttid],
+          	timestamp([Logg stoptid]) as [Logg stoptid]
+      Resident 
+          LoggEvent
+      Where 
+          NOT ( 
+              [Loggnivå] = $(vL.sublib.logg.loggnivå) 
+              AND isnull( [Logg stoptid])
+              )
+      ;
+  DROP table LoggEvent;
+  RENAME Table TmpLoggEvent to LoggEvent;
+  
+  /*
+  	Nollställer eller reducerar -1 till vL.sublib.logg.loggnivå för varje iteration.
+    Nollställning görs för att undvika att variabel följer med in till applikationen efter att applikationen körts klart.
+    OBS: Om inte alla start har stängts med ett stop så kommer variabeln ligga kvar med ett värde.
+  */
+  IF  vL.sublib.logg.loggnivå = 1 then
+  	SET vL.sublib.logg.loggnivå =;
+  ELSE 
+  	LET vL.sublib.logg.loggnivå= vL.sublib.logg.loggnivå-1; //alt(vL.sublib.logg.loggnivå-1, 0);
+  ENDIF
+  SET _sublib.logg.loggrubrik=;
+  ENDSUB //logg.stop
+  
+///$tab sublib.logg.test
+SUB sublib.logg.test  
+call sublib.logg.start('A','Startar sektion A')
+  sleep(1000);
+  
+  call sublib.logg.start('Loggar undersektion A1')
+    sleep(1000);
+    call sublib.logg.start('Loggar undersektion A2')
+      For i=1 to 3 step 1
+        call sublib.logg.start('Loop A3','Iteration $(i)')
+          sleep(1000);
+        call sublib.logg.stop  //Stop loop A3 iteration
+      next i
+      SET i=; //Nollställer loopvariabel
+        
+      call sublib.logg.start('Loggar A4')
+        sleep(1000);
+      call sublib.logg.stop
+      
+    call sublib.logg.stop
+  call sublib.logg.stop
+  
+  call sublib.logg.start('Loggar A5')
+    sleep(1000);
+  call sublib.logg.stop
+call sublib.logg.stop
+
+/** Färg som ändras beroende på Loggnivå i gränssnitt*/
+SET vL.logg.bgcolor = Pick(Loggnivå, Red(), Blue(), Yellow(200), Yellow(100), Blue(75), Blue(50), Blue(25));
+ENDSUB //test-sublib-logg
+///$tab RUN
+CALL sublib.kalender.test
+  
+CALL sublib.logg.test
+///$tab _gitoqlok
+/**
+** Last Updated at 8/28/2022, 2:46:04 PM: sublib.kalende.test [%_OBJECTS_%%_SCRIPT_%] (Vegar at 8/28/2022, 2:32:13 PM)
+*/
