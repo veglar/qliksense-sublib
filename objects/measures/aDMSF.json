@@ -10,9 +10,10 @@
     "qExpressions": [],
     "qActiveExpression": 0,
     "qNumFormat": {
-      "qType": "U",
-      "qnDec": 10,
-      "qUseThou": 0
+      "qType": "IV",
+      "qnDec": 2,
+      "qUseThou": 0,
+      "qFmt": "h:mm:ss"
     },
     "numFormatFromTemplate": true,
     "coloring": {
@@ -20,7 +21,8 @@
         "color": "#ffffff",
         "index": 1
       }
-    }
+    },
+    "isCustomFormatted": false
   },
   "qMetaDef": {
     "title": "[Logg starttid]-min(total [Logg starttid])",

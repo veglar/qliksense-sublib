@@ -278,34 +278,256 @@ ENDSUB //sublib.kalender.test
   
 ///$tab sublib.logg.test
 SUB sublib.logg.test  
-call sublib.logg.start('A','Startar sektion A')
+call sublib.logg.start('Livet','Loggar hela livet')
   sleep(1000);
   
-  call sublib.logg.start('Loggar undersektion A1')
+  call sublib.logg.start('Barndommen')
     sleep(1000);
-    call sublib.logg.start('Loggar undersektion A2')
+    
+    call sublib.logg.start('Förskoletiden')
+    sleep(1000);
+    call sublib.logg.stop
+    call sublib.logg.start('Skoltiden')
+        call sublib.logg.start('Grundskoletiden','Åk 1-9')
+          sleep(9000);
+        call sublib.logg.stop  //Stop loop A3 iteration
+      
       For i=1 to 3 step 1
-        call sublib.logg.start('Loop A3','Iteration $(i)')
+        call sublib.logg.start('Gymnasiet','Åk $(i)')
           sleep(1000);
         call sublib.logg.stop  //Stop loop A3 iteration
       next i
       SET i=; //Nollställer loopvariabel
-        
-      call sublib.logg.start('Loggar A4')
-        sleep(1000);
-      call sublib.logg.stop
       
     call sublib.logg.stop
   call sublib.logg.stop
-  
-  call sublib.logg.start('Loggar A5')
-    sleep(1000);
+  Sleep(2000); //Arbetslös mellan skola och jobb. En period som inte loggas explicit.
+  call sublib.logg.start('Jobbarlivet')
+    sleep(5000);
   call sublib.logg.stop
+  call sublib.logg.start('Pensionistlivet')
+    sleep(5000);
+  call sublib.logg.stop
+  
 call sublib.logg.stop
-
+  call sublib.logg.start('Döden')
 /** Färg som ändras beroende på Loggnivå i gränssnitt*/
 SET vL.logg.bgcolor = Pick(Loggnivå, Red(), Blue(), Yellow(200), Yellow(100), Blue(75), Blue(50), Blue(25));
 ENDSUB //test-sublib-logg
+///$tab sublib.rapport
+SUB sublib.rapport (_tabell,_konto,_enhet)
+	/**
+	Genererar en rapporttabell med rubrik-konto-relation.
+	För att köra denna funktion behövs en tabell med två eller tre kolumner som innehåller rubrik, definition och evt. nummerformatering.
+
+  Stödjer Qlik Sense VizBundle formtatet: https://help.qlik.com/sv-SE/sense/February2021/Subsystems/Hub/Content/Sense_Hub/Visualizations/VisualizationBundle/pl-pivot-chart.htm
+	@param1 Tabellnamn på den tabell som innehåller rapportdefinitionen. Detta blir namnet fältnamn i rapporten. 
+	@param2 Fältnamn som rapporten ska intervalmatchas och kopplas mot.
+	@param3 Fältnamn som kan skilja olika orginastoriska enheter med olika krav. Om endast ett bolag ange ett fält med statisk värde.
+
+	CALL MapReport.qvs('Demo','Kontonummer', 'BolagsID')
+
+	Expression: num(	sum( {< [Kvotdel]={"Täljare"}>} Belopp) 
+						/
+						alt(aggr(nodistinct sum( {<[Kvotdel]={"Nämnare"}>} Belopp), [Rapportrad] ),1)
+    				, [Format] )
+	*/
+ 	/* Namnen på fälten i tabellen i parametern _tabell */
+  
+  	LET _Rapportfält_Rapportrubrik 	= 'Rubrik';  			//'['& FieldName(1, '$(_tabell)') & ']';
+	LET _Rapportfält_Kontodefinition = 'Rapportradsdefinition';  //'['& FieldName(2, '$(_tabell)') & ']';
+  		
+	LET _StylingField_Format		=IF(FieldNumber('Format',		'$(_tabell)'),'[Format]', 		chr(39)&chr(39));
+	LET _StylingField_Fet 			=IF(FieldNumber('Fet',	 		'$(_tabell)'),'[Fet]', 			chr(39)&chr(39));
+	LET _StylingField_Bakgrund 		=IF(FieldNumber('Bakgrund',		'$(_tabell)'),'[Bakgrund]' , 	chr(39)&chr(39));
+	LET _StylingField_Teckenstil    =IF(FieldNumber('Teckenstil',	'$(_tabell)'),'[Teckenstil]', 	chr(39)&chr(39));   	
+	LET _StylingField_Textfärg      =IF(FieldNumber('Textfärg',	  	'$(_tabell)'),'[Textfärg]',		chr(39)&chr(39));       	
+	LET _StylingField_Justera       =IF(FieldNumber('Justera',	  	'$(_tabell)'),'[Justera]',		chr(39)&chr(39));              
+	LET _StylingField_Teckenstorlek	=IF(FieldNumber('Teckenstorlek','$(_tabell)'),'[Teckenstorlek]',chr(39)&chr(39));                        
+	LET _StylingField_Kommentar	    =IF(FieldNumber('Kommentar',	'$(_tabell)'),'[Kommentar]',	chr(39)&chr(39));         
+ 
+	[Rapportstyling ($(_tabell))]:
+  	LOAD 
+  		Autonumber([$(_Rapportfält_Rapportrubrik)], 'Styling') as [%rapportstyling ($(_tabell))],
+  		$(_StylingField_Format)        as [Format ($(_tabell))] , 
+		$(_StylingField_Fet)           as [Fet ($(_tabell))] ,                
+		evaluate($(_StylingField_Bakgrund))      as [Bakgrund ($(_tabell))]     ,                  
+		$(_StylingField_Teckenstil)    as [Teckenstil ($(_tabell))]   ,                      
+		alt(evaluate($(_StylingField_Textfärg)),$(_StylingField_Textfärg)   )   as [Textfärg ($(_tabell))]  ,                     
+		$(_StylingField_Justera)       as [Justera ($(_tabell))]     ,                
+		$(_StylingField_Teckenstorlek) as [Teckenstorlek ($(_tabell))],                            
+		$(_StylingField_Kommentar)     as [Kommentar ($(_tabell))] ,
+		[$(_Rapportfält_Rapportrubrik)] &';'& $(_StylingField_Fet)  &';'& $(_StylingField_Bakgrund)   &';'& $(_StylingField_Teckenstil)  &';'& $(_StylingField_Textfärg)  &';'&  $(_StylingField_Justera)   &';'& $(_StylingField_Teckenstorlek)  &';'& $(_StylingField_Kommentar)  as [Rapportstyling ($(_tabell))]
+	Resident 
+		[$(_tabell)]
+   	;
+	
+    TMP_Rubriksordning:
+    LOAD 
+	 AutoNumber('$(_konto)|'&[$(_enhet)]&'|'&[$(_Rapportfält_Rapportrubrik)],'$(_tabell)' ) as [Rubriksordning]
+    Resident [$(_tabell)];
+    
+	Rapport_kvotindelad:
+  	/* Läser in nämnare på rader med kvot. Kontorapport stödjer endast en kvot per rad*/	  
+  	LOAD 
+		[$(_enhet)] as Rapportorganisationsenhet,
+        AutoNumber('$(_konto)|'&[$(_enhet)]&'|'&[$(_Rapportfält_Rapportrubrik)],'$(_tabell)' ) as [Rubriksordning],
+        
+        //RecNo() as [Rubriksordning],
+    	[$(_Rapportfält_Rapportrubrik)] ,
+       	subfield(Subfield($(_Rapportfält_Kontodefinition), '/', -1), '+') as [$(_Rapportfält_Kontodefinition)],
+    	'Nämnare' as Kvotdel
+  	Resident [$(_tabell)]
+  	WHERE 
+  		WildMatch($(_Rapportfält_Kontodefinition), '*/*')
+        
+		;
+
+  /* Läser in täljare på rader med kvot. Kontorapport stödjer endast en kvot per rad*/ 
+ 	LOAD
+  		[$(_enhet)] as Rapportorganisationsenhet,
+      	AutoNumber('$(_konto)|'&[$(_enhet)]&'|'&[$(_Rapportfält_Rapportrubrik)],'$(_tabell)' ) as [Rubriksordning],
+        [$(_Rapportfält_Rapportrubrik)] ,
+     	subfield(Subfield($(_Rapportfält_Kontodefinition), '/', -2), '+') as [$(_Rapportfält_Kontodefinition)],
+      	'Täljare' as Kvotdel
+  	Resident 
+		[$(_tabell)]
+ 	WHERE 
+ 		WildMatch($(_Rapportfält_Kontodefinition), '*/*')
+      ;
+
+  	/* Läser in rader utan kvot */
+    LOAD 
+      	[$(_enhet)] as Rapportorganisationsenhet,
+        AutoNumber('$(_konto)|'&[$(_enhet)]&'|'&[$(_Rapportfält_Rapportrubrik)],'$(_tabell)' ) as [Rubriksordning],
+       	[$(_Rapportfält_Rapportrubrik)] ,
+     	Subfield($(_Rapportfält_Kontodefinition), '+') as [$(_Rapportfält_Kontodefinition)],
+        'Täljare' as Kvotdel
+    Resident [$(_tabell)]
+    WHERE NOT WildMatch($(_Rapportfält_Kontodefinition), '*/*')
+  
+;
+	DROP TABLE TMP_Rubriksordning;
+   	DROP Table [$(_tabell)]
+    ;
+
+
+    FOR EACH _Rapportorganisationsenhet in FieldValueList('Rapportorganisationsenhet')
+      /* 
+      Löser ut alla referenser mellan raderna.
+      */
+      Trace ### $(_Rapportorganisationsenhet)  $(_tabell);
+      
+      Rapport_hiearchy:
+      Hierarchy ([$(_Rapportfält_Rapportrubrik)], [$(_Rapportfält_Kontodefinition)], NodeName)
+      LOAD 
+          [$(_Rapportfält_Rapportrubrik)], 
+          [$(_Rapportfält_Kontodefinition)], 
+          [$(_Rapportfält_Kontodefinition)] as NodeName, 
+          Kvotdel,
+          [Rubriksordning]
+      Resident Rapport_kvotindelad
+      WHERE  Rapportorganisationsenhet = '$(_Rapportorganisationsenhet)' ;
+
+     // drop table Rapport_kvotindelad;
+
+
+    /* Löser ut alla rader till ett intervall. En-kontorader blir interval på ett kontonummer. 
+      Detta intervalmatchas mot kontonummer som måste finnas inläst i datamodellen
+    */
+  
+     [Rapport ($(_tabell))]:
+     LOAD  
+          '$(_Rapportorganisationsenhet)' as Rapportorganisationsenhet,
+          [$(_Rapportfält_Rapportrubrik)] 							as [Rubrik ($(_konto)_$(_tabell))],  
+          Autonumber([$(_Rapportfält_Rapportrubrik)], 'Styling') 	as [%rapportstyling ($(_tabell))],
+          subfield(NodeName1, '..', 1) 								as [_KontoFrom],
+          subfield(NodeName1, '..', -1) 							as [_KontoTom],
+          Kvotdel 													as [Kvotdel ($(_tabell))],
+          [Rubriksordning] 											as [Rapportrad ($(_tabell))]
+      Resident Rapport_hiearchy
+   //   WHERE isnum(subfield(NodeName1, '..', 1))   
+      ;
+      DROP TABLE Rapport_hiearchy;
+  
+    next   _Rapportorganisationsenhet
+    LET _Rapportorganisationsenhet=;
+         
+    drop table Rapport_kvotindelad;
+
+    LEFT JOIN
+  	IntervalMatch([$(_konto)])
+  	LOAD  [_KontoFrom], [_KontoTom] 
+  	Resident 
+    	[Rapport ($(_tabell))]
+    WHERE isnum([_KontoFrom])
+   ;
+   
+//    /** Hanterar de fall där värdet inte är numerisk utan en sträng*/
+//      LOAD  
+//           '$(_Rapportorganisationsenhet)' as Rapportorganisationsenhet,
+//           [$(_Rapportfält_Rapportrubrik)] 							as [Rubrik ($(_konto)_$(_tabell))],  
+//           Autonumber([$(_Rapportfält_Rapportrubrik)], 'Styling') 	as [%rapportstyling ($(_tabell))],
+//           subfield(NodeName1, '..', 1) 								as [_KontoFrom],
+//           subfield(NodeName1, '..', -1) 							as [_KontoTom],
+//           Kvotdel 													as [Kvotdel ($(_tabell))],
+//           [Rubriksordning] 											as [Rapportrad ($(_tabell))],
+//           '$(_Rapportorganisationsenhet)' & '|'& subfield(NodeName1, '..', 1) as [$(_konto)]
+//       Resident Rapport_hiearchy
+//       WHERE NOT isnum(subfield(NodeName1, '..', 1))   
+//       ;
+//       DROP TABLE Rapport_hiearchy;
+  
+   
+  //  DROP FIELD [_KontoFrom], [_KontoTom];
+
+
+	sub ConcatReport
+		
+		/** Autoconcatinerar Styling */
+	 	[Rapportstyling $(_konto)]:
+	  	LOAD 
+      		[%rapportstyling ($(_tabell))] as [%rapportstyling_$(_konto)],
+	  		MaxString([Format ($(_tabell))]) as [Format_$(_konto)] , 
+			MaxString([Fet ($(_tabell))]) as [Fet_$(_konto)] ,                
+			MaxString([Bakgrund ($(_tabell))]) as [Bakgrund_$(_konto)]     ,                  
+			MaxString([Teckenstil ($(_tabell))]) as [Teckenstil_$(_konto)]   ,                      
+			MaxString([Textfärg ($(_tabell))]) as [Textfärg_$(_konto)]  ,                     
+	    	MaxString([Justera ($(_tabell))]) as [Justera_$(_konto)]     ,                
+			MaxString([Teckenstorlek ($(_tabell))]) as [Teckenstorlek_$(_konto)],                            
+			MaxString([Kommentar ($(_tabell))]) as [Kommentar_$(_konto)] ,
+		  	MaxString([Rapportstyling ($(_tabell))]) as [Rapportstyling_$(_konto)]
+		Resident 
+			[Rapportstyling ($(_tabell))]
+        group by  [%rapportstyling ($(_tabell))]
+		;
+		Drop table  	[Rapportstyling ($(_tabell))];
+
+
+		/** Concatinerar rapporttabell*/
+		IF isnull( NoOfFields ('Rapport_$(_konto)')) then
+			/*Skapar tom tabell som det går att concatenera på.*/
+			[Rapport_$(_konto)]:
+			LOAD * 
+			Inline [Kvotdel_$(_konto), Rapportrad_$(_konto)];
+		endif 
+
+		Concatenate ([Rapport_$(_konto)])
+		LOAD 
+     	 	Rapportorganisationsenhet &'|'& alt([$(_konto)], [_KontoFrom]) as [%rapport_$(_konto)],
+			[%rapportstyling ($(_tabell))] as [%rapportstyling_$(_konto)],
+			[Kvotdel ($(_tabell))] as [Kvotdel_$(_konto)], 
+			[Rapportrad ($(_tabell))] AS [Rapportrad_$(_konto)],
+			[Rubrik ($(_konto)_$(_tabell))]  
+		Resident
+			[Rapport ($(_tabell))]
+		;
+
+		DROP TABLE [Rapport ($(_tabell))];
+	 endsub //	ConcatReport
+	call ConcatReport
+
+ENDSUB //SkapaRapport
 ///$tab RUN
 CALL sublib.kalender.test
   

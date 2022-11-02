@@ -1,30 +1,38 @@
 ///$tab sublib.logg.test
 SUB sublib.logg.test  
-call sublib.logg.start('A','Startar sektion A')
+call sublib.logg.start('Livet','Loggar hela livet')
   sleep(1000);
   
-  call sublib.logg.start('Loggar undersektion A1')
+  call sublib.logg.start('Barndommen')
     sleep(1000);
-    call sublib.logg.start('Loggar undersektion A2')
+    
+    call sublib.logg.start('Förskoletiden')
+    sleep(1000);
+    call sublib.logg.stop
+    call sublib.logg.start('Skoltiden')
+        call sublib.logg.start('Grundskoletiden','Åk 1-9')
+          sleep(9000);
+        call sublib.logg.stop  //Stop loop A3 iteration
+      
       For i=1 to 3 step 1
-        call sublib.logg.start('Loop A3','Iteration $(i)')
+        call sublib.logg.start('Gymnasiet','Åk $(i)')
           sleep(1000);
         call sublib.logg.stop  //Stop loop A3 iteration
       next i
       SET i=; //Nollställer loopvariabel
-        
-      call sublib.logg.start('Loggar A4')
-        sleep(1000);
-      call sublib.logg.stop
       
     call sublib.logg.stop
   call sublib.logg.stop
-  
-  call sublib.logg.start('Loggar A5')
-    sleep(1000);
+  Sleep(2000); //Arbetslös mellan skola och jobb. En period som inte loggas explicit.
+  call sublib.logg.start('Jobbarlivet')
+    sleep(5000);
   call sublib.logg.stop
+  call sublib.logg.start('Pensionistlivet')
+    sleep(5000);
+  call sublib.logg.stop
+  
 call sublib.logg.stop
-
+  call sublib.logg.start('Döden')
 /** Färg som ändras beroende på Loggnivå i gränssnitt*/
 SET vL.logg.bgcolor = Pick(Loggnivå, Red(), Blue(), Yellow(200), Yellow(100), Blue(75), Blue(50), Blue(25));
 ENDSUB //test-sublib-logg

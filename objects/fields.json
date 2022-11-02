@@ -78,8 +78,7 @@
   {
     "qName": "Loggbeskrivning",
     "qTags": [
-      "$text",
-      "$ascii"
+      "$text"
     ],
     "qSrcTables": [
       "LoggEvent"
@@ -98,8 +97,7 @@
   {
     "qName": "Loggrubrik",
     "qTags": [
-      "$text",
-      "$ascii"
+      "$text"
     ],
     "qSrcTables": [
       "LoggEvent"

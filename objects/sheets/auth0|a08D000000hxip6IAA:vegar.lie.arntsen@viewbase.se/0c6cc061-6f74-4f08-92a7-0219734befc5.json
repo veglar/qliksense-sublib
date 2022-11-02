@@ -17,16 +17,16 @@
     "cells": [
       {
         "bounds": {
-          "y": 33.33333333333333,
-          "x": 0,
-          "width": 100,
-          "height": 66.66666666666666
+          "y": 50,
+          "x": 8.333333333333332,
+          "width": 62.5,
+          "height": 50
         },
-        "col": 0,
-        "colspan": 24,
+        "col": 2,
+        "colspan": 15,
         "name": "mJgdypQ",
-        "row": 4,
-        "rowspan": 8,
+        "row": 6,
+        "rowspan": 6,
         "smartGrid": {
           "rowIdx": 0,
           "itemIdx": 0,
@@ -41,13 +41,13 @@
         "type": "barchart",
         "col": 0,
         "row": 0,
-        "colspan": 24,
-        "rowspan": 4,
+        "colspan": 17,
+        "rowspan": 6,
         "bounds": {
           "y": 0,
           "x": 0,
-          "width": 100,
-          "height": 33.33333333333333
+          "width": 70.83333333333334,
+          "height": 50
         }
       }
     ],
@@ -506,14 +506,141 @@
               "othersLabel": "Others"
             }
           ],
-          "qMeasures": [],
+          "qMeasures": [
+            {
+              "qDef": {
+                "qLabel": "Varaktighet",
+                "qTags": [],
+                "qGrouping": "N",
+                "qDef": "max([Logg stoptid])-min([Logg starttid])",
+                "qNumFormat": {
+                  "qType": "IV",
+                  "qnDec": 2,
+                  "qUseThou": 0,
+                  "qFmt": "h:mm:ss"
+                },
+                "qAggrFunc": "None",
+                "qAccumulate": 0,
+                "qActiveExpression": 0,
+                "qExpressions": [],
+                "autoSort": true,
+                "cId": "dcPyc",
+                "numFormatFromTemplate": true,
+                "textAlign": {
+                  "auto": true,
+                  "align": "left"
+                },
+                "representation": {
+                  "type": "text",
+                  "indicator": {
+                    "showTextValues": true,
+                    "applySegmentColors": false,
+                    "position": "right"
+                  },
+                  "miniChart": {
+                    "type": "sparkline",
+                    "colors": {
+                      "main": {
+                        "index": 6
+                      },
+                      "max": {
+                        "index": 0,
+                        "color": "none"
+                      },
+                      "min": {
+                        "index": 0,
+                        "color": "none"
+                      },
+                      "first": {
+                        "index": 0,
+                        "color": "none"
+                      },
+                      "last": {
+                        "index": 0,
+                        "color": "none"
+                      },
+                      "positive": {
+                        "index": 6
+                      },
+                      "negative": {
+                        "index": 10,
+                        "color": "#f93f17"
+                      }
+                    },
+                    "showDots": true,
+                    "yAxis": {
+                      "scale": "local",
+                      "position": "auto"
+                    }
+                  },
+                  "imageSetting": "label",
+                  "imageLabel": "",
+                  "imageUrl": "",
+                  "imageSize": "fitHeight",
+                  "imagePosition": "topCenter"
+                },
+                "conditionalColoring": {
+                  "segments": {
+                    "limits": [],
+                    "paletteColors": [
+                      {
+                        "index": 6,
+                        "icon": "dot"
+                      }
+                    ]
+                  }
+                },
+                "isCustomFormatted": false
+              },
+              "qSortBy": {
+                "qSortByNumeric": -1,
+                "qSortByLoadOrder": 1,
+                "qExpression": {}
+              },
+              "qAttributeExpressions": [
+                {
+                  "qExpression": "$(vL.logg.bgcolor)",
+                  "qAttribute": true,
+                  "id": "cellBackgroundColor"
+                }
+              ],
+              "qAttributeDimensions": [],
+              "qCalcCond": {},
+              "qCalcCondition": {
+                "qCond": {},
+                "qMsg": {}
+              },
+              "qTrendLines": [],
+              "qMiniChartDef": {
+                "qSortBy": {
+                  "qExpression": {}
+                },
+                "qOtherTotalSpec": {
+                  "qOtherMode": "OTHER_OFF",
+                  "qOtherCounted": {},
+                  "qOtherLimit": {},
+                  "qOtherLimitMode": "OTHER_GT_LIMIT",
+                  "qSuppressOther": true,
+                  "qForceBadValueKeeping": true,
+                  "qApplyEvenWhenPossiblyWrongResult": true,
+                  "qOtherSortMode": "OTHER_SORT_DESCENDING",
+                  "qTotalMode": "TOTAL_OFF",
+                  "qReferencedExpression": {}
+                },
+                "qMaxNumberPoints": -1,
+                "qAttributeExpressions": [],
+                "qNullSuppression": true
+              }
+            }
+          ],
           "qInterColumnSortOrder": [
             0,
             3,
             1,
             2,
             5,
-            4
+            4,
+            6
           ],
           "qSuppressMissing": true,
           "qInitialDataFetch": [
@@ -541,7 +668,8 @@
             2,
             3,
             4,
-            5
+            5,
+            6
           ],
           "qExpansionState": [],
           "qDynamicScript": [],
@@ -551,15 +679,17 @@
             2,
             3,
             4,
-            5
+            5,
+            6
           ],
           "columnWidths": [
-            -1,
-            -1,
-            -1,
-            -1,
-            -1,
-            -1
+            67,
+            70,
+            110,
+            116,
+            123,
+            122,
+            97
           ],
           "qLayoutExclude": {
             "qHyperCubeDef": {
@@ -674,7 +804,7 @@
               "qDef": {
                 "qGrouping": "N",
                 "qFieldDefs": [
-                  "=  Loggrubrik &'('&[Logg-ID] &' )'"
+                  "=  dual(Loggrubrik &'|'&Loggbeskrivning,[Logg-ID] )"
                 ],
                 "qFieldLabels": [
                   ""
@@ -841,7 +971,6 @@
             1,
             2
           ],
-          "qSuppressZero": true,
           "qSuppressMissing": true,
           "qInitialDataFetch": [
             {
@@ -893,7 +1022,7 @@
           "refLines": [],
           "dimRefLines": []
         },
-        "showTitles": true,
+        "showTitles": false,
         "title": "",
         "subtitle": "",
         "footnote": "",
@@ -956,7 +1085,7 @@
         },
         "dimensionAxis": {
           "continuousAuto": true,
-          "show": "all",
+          "show": "labels",
           "label": "auto",
           "dock": "near",
           "axisDisplayMode": "auto",
@@ -964,7 +1093,7 @@
         },
         "preferContinuousAxis": true,
         "measureAxis": {
-          "show": "all",
+          "show": "labels",
           "dock": "near",
           "spacing": 1,
           "autoMinMax": true,
