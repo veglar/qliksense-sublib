@@ -1,0 +1,15 @@
+{
+  "qInfo": {
+    "qId": "70badbb8-6c12-4c72-addf-7a9f718c9763",
+    "qType": "variable"
+  },
+  "qMetaDef": {},
+  "qName": "vL.SetModifier.YTD",
+  "qNumberPresentation": {
+    "qType": "U",
+    "qnDec": 10,
+    "qUseThou": 0
+  },
+  "qDefinition": "År, Månad, Datum, [År-månad],Veckodag,Vecka,Kvartal,[År-kvartal], [Historik/Framtid],\r\n\t\t\t\tÅr=P({<År, Månad, Datum, [År-månad],Veckodag,Vecka,Kvartal,[År-kvartal], [Historik/Framtid], Datum={'$1'}>}År),\r\n\t\t\t\tDatum = {\"<=$(=Date('$1'))\"}",
+  "qIsScriptCreated": true
+}

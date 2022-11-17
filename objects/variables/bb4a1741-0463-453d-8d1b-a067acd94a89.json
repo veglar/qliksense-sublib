@@ -1,0 +1,15 @@
+{
+  "qInfo": {
+    "qId": "bb4a1741-0463-453d-8d1b-a067acd94a89",
+    "qType": "variable"
+  },
+  "qMetaDef": {},
+  "qName": "vL.SetModifier.CleanCalender",
+  "qNumberPresentation": {
+    "qType": "U",
+    "qnDec": 10,
+    "qUseThou": 0
+  },
+  "qDefinition": "År, Månad, Datum, [År-månad],Veckodag,Vecka,Kvartal,[År-kvartal], [Historik/Framtid]",
+  "qIsScriptCreated": true
+}

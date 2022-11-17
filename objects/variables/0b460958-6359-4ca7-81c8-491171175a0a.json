@@ -1,0 +1,14 @@
+{
+  "qInfo": {
+    "qId": "0b460958-6359-4ca7-81c8-491171175a0a",
+    "qType": "variable"
+  },
+  "qMetaDef": {},
+  "qName": "x",
+  "qNumberPresentation": {
+    "qType": "U",
+    "qnDec": 10,
+    "qUseThou": 0
+  },
+  "qDefinition": "År, Månad, Datum, [År-månad],Veckodag,Vecka,Kvartal,[År-kvartal], [Historik/Framtid],\r\n\t\t\t\tÅr=P({<År, Månad, Datum, [År-månad],Veckodag,Vecka,Kvartal,[År-kvartal], [Historik/Framtid], Datum={'$1'}>}År),\r\n\t\t\t\tDatum = {\"<=$(=Date('$1'))\"}"
+}
