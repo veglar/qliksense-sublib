@@ -1,6 +1,6 @@
 {
   "qInfo": {
-    "qId": "f9b23377-0a7a-4d38-9f6d-297ea2ce8426",
+    "qId": "88a89c3b-1c00-459e-91c5-6c6882584cf4",
     "qType": "variable"
   },
   "qMetaDef": {},
@@ -10,5 +10,6 @@
     "qnDec": 10,
     "qUseThou": 0
   },
-  "qDefinition": "7"
+  "qDefinition": "1",
+  "qIsScriptCreated": true
 }
