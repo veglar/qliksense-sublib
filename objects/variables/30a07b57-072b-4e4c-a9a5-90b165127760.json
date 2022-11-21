@@ -1,0 +1,15 @@
+{
+  "qInfo": {
+    "qId": "30a07b57-072b-4e4c-a9a5-90b165127760",
+    "qType": "variable"
+  },
+  "qMetaDef": {},
+  "qName": "_StylingField_Teckenstil",
+  "qNumberPresentation": {
+    "qType": "U",
+    "qnDec": 10,
+    "qUseThou": 0
+  },
+  "qDefinition": "[Teckenstil]",
+  "qIsScriptCreated": true
+}

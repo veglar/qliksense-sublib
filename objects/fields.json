@@ -1,172 +1,179 @@
 [
   {
-    "qName": "%testdatum",
+    "qName": "%rapport_Konto",
+    "qTags": [
+      "$key",
+      "$text",
+      "$ascii"
+    ],
+    "qSrcTables": [
+      "Transaktioner",
+      "Rapport_Konto"
+    ]
+  },
+  {
+    "qName": "%rapportstyling_Konto",
     "qTags": [
       "$key",
       "$numeric",
-      "$integer",
-      "$timestamp",
-      "$date"
+      "$integer"
     ],
     "qSrcTables": [
-      "AUTOGENERATE(365)",
-      "Kalender"
+      "Rapportstyling Konto",
+      "Rapport_Konto"
+    ]
+  },
+  {
+    "qName": "Bakgrund_Konto",
+    "qTags": [
+      "$numeric",
+      "$integer"
+    ],
+    "qSrcTables": [
+      "Rapportstyling Konto"
+    ]
+  },
+  {
+    "qName": "Belopp",
+    "qTags": [
+      "$numeric",
+      "$integer"
+    ],
+    "qSrcTables": [
+      "Transaktioner"
+    ]
+  },
+  {
+    "qName": "Bolag",
+    "qTags": [
+      "$text",
+      "$ascii"
+    ],
+    "qSrcTables": [
+      "Transaktioner"
     ]
   },
   {
     "qName": "Datum",
     "qTags": [
-      "$numeric",
-      "$integer",
-      "$timestamp",
-      "$date"
+      "$text",
+      "$ascii"
     ],
     "qSrcTables": [
-      "Kalender"
+      "Transaktioner"
     ]
   },
   {
-    "qName": "Historik/Framtid",
+    "qName": "Fet_Konto",
     "qTags": [
       "$text",
       "$ascii"
     ],
     "qSrcTables": [
-      "Kalender"
+      "Rapportstyling Konto"
     ]
   },
   {
-    "qName": "Kvartal",
+    "qName": "Format_Konto",
+    "qTags": [
+      "$text"
+    ],
+    "qSrcTables": [
+      "Rapportstyling Konto"
+    ]
+  },
+  {
+    "qName": "Justera_Konto",
     "qTags": [
       "$text",
       "$ascii"
     ],
     "qSrcTables": [
-      "Kalender"
+      "Rapportstyling Konto"
     ]
   },
   {
-    "qName": "Logg starttid",
+    "qName": "Kommentar_Konto",
     "qTags": [
-      "$numeric",
-      "$timestamp"
+      "$text",
+      "$ascii"
     ],
     "qSrcTables": [
-      "LoggEvent"
+      "Rapportstyling Konto"
     ]
   },
   {
-    "qName": "Logg stoptid",
-    "qTags": [
-      "$numeric",
-      "$timestamp"
-    ],
-    "qSrcTables": [
-      "LoggEvent"
-    ]
-  },
-  {
-    "qName": "Logg-ID",
+    "qName": "Konto",
     "qTags": [
       "$numeric",
       "$integer"
     ],
     "qSrcTables": [
-      "LoggEvent"
+      "Transaktioner"
     ]
   },
   {
-    "qName": "Loggbeskrivning",
+    "qName": "Kvotdel_Konto",
     "qTags": [
       "$text"
     ],
     "qSrcTables": [
-      "LoggEvent"
+      "Rapport_Konto"
     ]
   },
   {
-    "qName": "Loggnivå",
+    "qName": "Rapportrad_Konto",
     "qTags": [
       "$numeric",
       "$integer"
     ],
     "qSrcTables": [
-      "LoggEvent"
+      "Rapport_Konto"
     ]
   },
   {
-    "qName": "Loggrubrik",
+    "qName": "Rapportstyling_Konto",
     "qTags": [
       "$text"
     ],
     "qSrcTables": [
-      "LoggEvent"
+      "Rapportstyling Konto"
     ]
   },
   {
-    "qName": "Månad",
+    "qName": "Rubrik (Konto_RR)",
     "qTags": [
-      "$numeric",
-      "$integer"
+      "$text"
     ],
     "qSrcTables": [
-      "Kalender"
+      "Rapport_Konto"
     ]
   },
   {
-    "qName": "Vecka",
+    "qName": "Teckenstil_Konto",
     "qTags": [
-      "$numeric",
-      "$integer"
+      "$text",
+      "$ascii"
     ],
     "qSrcTables": [
-      "Kalender"
+      "Rapportstyling Konto"
     ]
   },
   {
-    "qName": "Veckodag",
+    "qName": "Teckenstorlek_Konto",
     "qTags": [
-      "$numeric",
-      "$integer"
+      "$text",
+      "$ascii"
     ],
     "qSrcTables": [
-      "Kalender"
+      "Rapportstyling Konto"
     ]
   },
   {
-    "qName": "År",
-    "qTags": [
-      "$numeric",
-      "$integer",
-      "$timestamp",
-      "$date"
-    ],
+    "qName": "Textfärg_Konto",
+    "qTags": [],
     "qSrcTables": [
-      "Kalender"
-    ]
-  },
-  {
-    "qName": "År-kvartal",
-    "qTags": [
-      "$numeric",
-      "$integer",
-      "$timestamp",
-      "$date"
-    ],
-    "qSrcTables": [
-      "Kalender"
-    ]
-  },
-  {
-    "qName": "År-månad",
-    "qTags": [
-      "$numeric",
-      "$integer",
-      "$timestamp",
-      "$date"
-    ],
-    "qSrcTables": [
-      "Kalender"
+      "Rapportstyling Konto"
     ]
   }
 ]
