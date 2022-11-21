@@ -1,14 +1,15 @@
 {
   "qInfo": {
-    "qId": "88a89c3b-1c00-459e-91c5-6c6882584cf4",
+    "qId": "d8d6b423-9a72-43e5-b0d0-d573676298be",
     "qType": "variable"
   },
   "qMetaDef": {},
-  "qName": "vL.sublib.logg.loggnivå",
+  "qName": "_StylingField_Kommentar",
   "qNumberPresentation": {
     "qType": "U",
     "qnDec": 10,
     "qUseThou": 0
   },
-  "qDefinition": "1"
+  "qDefinition": "[Kommentar]",
+  "qIsScriptCreated": true
 }

@@ -1,0 +1,37 @@
+///$tab sublib.rapport.test
+Transaktioner: 
+crosstable (Datum, Belopp,2)
+LOAD* inline [
+Bolag, 	Konto,  2023 Q2,2023 Q1,2022 Q4,2022 Q3,2022 Q2,2022 Q1,2022 Q4,2021 Q3,2021 Q2,2021 Q1
+ACME,	3010,   8784,   8284,	8758,   8772,   8211,   7990,   7602,   7330,   6808,   6519
+ACME, 	4415,   -5179,  -4929,  -5268,  -5278,  -4927,  -4699,  -4376,  -4182,  -3905,  -3810
+ACME, 	6000,   -2704,  -2548,  -2720,  -2939,  -2580,  -2485,  -2409,  -2362,  -2188,  -2103
+ACME, 	7200,   -200,   -195,   -221,   -253,   -237,   -193,   -191,   -189,   -179,   -174
+ACME, 	8311,   2,   	0,   	0, 		1,   	1,   	1,   	2,   	2, 		2,   	2
+ACME, 	8413,   -65,  	-64,   	-68,   	-3,   	-2,   	-2,  	-1,   	-1,   	-2,   	-13
+ACME, 	8910,   -134,   -124,   -106,	-20,   	-109,   -130,   -129,   -138,   -125,   -88
+];
+
+LEFT JOIN  LOAD Datum, Bolag, Konto, Bolag&'|'&Konto as %rapport_Konto Resident Transaktioner;
+
+
+RR:
+LOAD 'ACME' as Bolag, * inline [
+Rubrik, 				Rapportradsdefinition,	Format,		Fet,		Bakgrund,Teckenstil,Textfärg,Justera,Teckenstorlek,Kommentar
+Försäljning,			3000..3999,				"# ##0 kr",	"",			,,,,,
+Kostnad såld vara,		4000..5999,				"# ##0 kr",	"",,,,,,
+Bruttoresultat,			Försäljning+Kostnad såld vara,"# ##0 kr",<bold>,yellow(125)
+Försäljningskostnader, 	6000..6999,				"# ##0 kr",	
+Varukostnader,			4000..4499+4500..4999,	"# ##0 kr",,,,QlikTechblue(),,,
+Administrationskostnader,7200,					"# ##0 kr"
+Rörelseresultat, 		Bruttoresultat+ 6000..7200,"# ##0 kr",<bold>,yellow(125)
+Rörelsemarginal, 		Rörelseresultat/Försäljning,"# ##0%",<bold>,yellow(200),		 <italic>
+Finansiella intäkter, 	8300..8399,				"# ##0 kr"
+Finansiella kostnader,	8400..8499,				"# ##0 kr"
+Resultat efter finansiella poster,Rörelseresultat+ 8300..8499,"# ##0 kr",<bold>
+Inkomstskatt, 			8900..8999,				"# ##0 kr"
+Resultat, 				Resultat efter finansiella poster+Inkomstskatt,"# ##0 kr",<bold>,yellow(125)
+
+
+];
+CALL sublib.rapport ('RR','Konto', 'Bolag')

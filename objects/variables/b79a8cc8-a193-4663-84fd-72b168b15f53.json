@@ -1,14 +1,15 @@
 {
   "qInfo": {
-    "qId": "88a89c3b-1c00-459e-91c5-6c6882584cf4",
+    "qId": "b79a8cc8-a193-4663-84fd-72b168b15f53",
     "qType": "variable"
   },
   "qMetaDef": {},
-  "qName": "vL.sublib.logg.loggnivå",
+  "qName": "_StylingField_Justera",
   "qNumberPresentation": {
     "qType": "U",
     "qnDec": 10,
     "qUseThou": 0
   },
-  "qDefinition": "1"
+  "qDefinition": "[Justera]",
+  "qIsScriptCreated": true
 }

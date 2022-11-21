@@ -10,6 +10,5 @@
     "qnDec": 10,
     "qUseThou": 0
   },
-  "qDefinition": "Pick(Loggnivå, Red(), Blue(), Yellow(200), Yellow(100), Blue(75), Blue(50), Blue(25))",
-  "qIsScriptCreated": true
+  "qDefinition": "Pick(Loggnivå, Red(), Blue(), Yellow(200), Yellow(100), Blue(75), Blue(50), Blue(25))"
 }

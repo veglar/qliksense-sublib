@@ -1,14 +1,15 @@
 {
   "qInfo": {
-    "qId": "88a89c3b-1c00-459e-91c5-6c6882584cf4",
+    "qId": "30faffd8-b5e1-4800-ae35-82bad37fb51c",
     "qType": "variable"
   },
   "qMetaDef": {},
-  "qName": "vL.sublib.logg.loggnivå",
+  "qName": "_StylingField_Bakgrund",
   "qNumberPresentation": {
     "qType": "U",
     "qnDec": 10,
     "qUseThou": 0
   },
-  "qDefinition": "1"
+  "qDefinition": "[Bakgrund]",
+  "qIsScriptCreated": true
 }

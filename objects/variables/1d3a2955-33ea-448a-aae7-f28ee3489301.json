@@ -1,14 +1,15 @@
 {
   "qInfo": {
-    "qId": "88a89c3b-1c00-459e-91c5-6c6882584cf4",
+    "qId": "1d3a2955-33ea-448a-aae7-f28ee3489301",
     "qType": "variable"
   },
   "qMetaDef": {},
-  "qName": "vL.sublib.logg.loggnivå",
+  "qName": "_StylingField_Textfärg",
   "qNumberPresentation": {
     "qType": "U",
     "qnDec": 10,
     "qUseThou": 0
   },
-  "qDefinition": "1"
+  "qDefinition": "[Textfärg]",
+  "qIsScriptCreated": true
 }

@@ -1,14 +1,15 @@
 {
   "qInfo": {
-    "qId": "88a89c3b-1c00-459e-91c5-6c6882584cf4",
+    "qId": "4bb6db8a-ebb2-4a1c-a623-7a7e12b234f2",
     "qType": "variable"
   },
   "qMetaDef": {},
-  "qName": "vL.sublib.logg.loggnivå",
+  "qName": "_StylingField_Fet",
   "qNumberPresentation": {
     "qType": "U",
     "qnDec": 10,
     "qUseThou": 0
   },
-  "qDefinition": "1"
+  "qDefinition": "[Fet]",
+  "qIsScriptCreated": true
 }
