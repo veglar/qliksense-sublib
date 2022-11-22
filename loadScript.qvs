@@ -18,302 +18,6 @@ SET LongMonthNames='January;February;March;April;May;June;July;August;September;
 SET DayNames='Mon;Tue;Wed;Thu;Fri;Sat;Sun';
 SET LongDayNames='Monday;Tuesday;Wednesday;Thursday;Friday;Saturday;Sunday';
 SET NumericalAbbreviation='3:k;6:M;9:G;12:T;15:P;18:E;21:Z;24:Y;-3:m;-6:μ;-9:n;-12:p;-15:f;-18:a;-21:z;-24:y';
-///$tab sublib.kalender
-SUB sublib.kalender (_minKalenderdatum, _maxKalenderdatum, _kalendernyckelfält, _calendarPrefix)
-/**
-Skapa kalender från ett angett min- och max-datum
-
-@version 2021-07-30
-@Param 1 Obligatoriskt. [Minsta kalenderdatum] Det datum där kalendern ska börja.
-@Param 2 Obligatoriskt. Det datum kalendern sk sluta
-@Param 3 Valfri. Namn på nyckelfält som inehåller heltalsrepresentationen av kalenderdagen.
-@Param 4 Valfri. Ett prefix som identifierer både kalendertabell och fältnamn. Default är <blank>
-@variable IN vL.sublib.kalender.årmånadformat Det format som År-månad-fältet ska presenteras i. Default='YYYY MMM'.
-@variable IN vL.sublib.kalender.tabellnamn Namn på kalendertabell. Evt. prefix angett som @param 4 tillkommer i slutgiltig tabellnam.
-@variable IN vL.sublib.kalender.idag Brytpunkt mellan historik och framtid.  Default=today().
-
-*/
-	/*
-	* Konfigurering av kalenderparametrar
-	*/
-	LET vL.sublib.kalender.årmånadformat = if(len('$(vL.sublib.kalender.årmånadformat)')=0, 'YYYY MMM', vL.sublib.kalender.årmånadformat);
-	LET vL.sublib.kalender.tabellnamn = if(len('$(vL.sublib.kalender.tabellnamn)')=0, 'Kalender', vL.sublib.kalender.tabellnamn);
-	LET vL.sublib.kalender.idag= ;
-	LET FirstMonthOfYear= if(len('$(FirstMonthOfYear)')=0, 1, FirstMonthOfYear);
-    LET ReferenceDay= if(len('$(ReferenceDay)')=0, 1, ReferenceDay);
-    LET BrokenWeeks= if(len('$(BrokenWeeks)')=0, 1, BrokenWeeks);
-    LET FirstWeekDay= if(len('$(FirstWeekDay)')=0, 1, FirstWeekDay);
-	/*
-	* Stadfäster nyckelfält i kalendern. 
-	* Använder @param3 _kalendernyckelfält, om ej definierat så används fältnamnet [%datum] .
-	*/
-	IF 	len(_kalendernyckelfält)>0 then
-		SET _kalendernyckelfält = $(_kalendernyckelfält);
-	ELSE
-		SET _kalendernyckelfält = %datum;
-	ENDIF 
-	
-	/* 
-	* Skapar kalendertabell
-	*/
-	[$(_calendarPrefix)$(vL.sublib.kalender.tabellnamn)]:
-	NOCONCATENATE LOAD      
-		num( temporärdatum) 										as [$(_kalendernyckelfält)] ,
-		Date(temporärdatum) 										as [$(_calendarPrefix)Datum],
-		weekday(temporärdatum, $(FirstWeekDay)) 					as [$(_calendarPrefix)Veckodag],
-		YearName(temporärdatum,0,$(FirstMonthOfYear)) 				as [$(_calendarPrefix)År],
-		dual(week([temporärdatum],$(FirstWeekDay) ,$(BrokenWeeks),$(ReferenceDay)),
-			 week(addmonths(temporärdatum,1-$(FirstMonthOfYear)),$(FirstWeekDay) ,$(BrokenWeeks),$(ReferenceDay))
-			) 														as [$(_calendarPrefix)Vecka],
-		
-        DUAL(Month(temporärdatum) ,  
-			 num(Month(MonthName(temporärdatum, +1- $(FirstMonthOfYear))))
-			)														as [$(_calendarPrefix)Månad],
-            
-		dual(date(MonthName(temporärdatum), '$(vL.sublib.kalender.årmånadformat)'),
-			 MonthStart(temporärdatum)) 							as [$(_calendarPrefix)År-månad],
-		'Q'&Num(Ceil(Num(Month(temporärdatum))/3)) 					as [$(_calendarPrefix)Kvartal],
-		Dual('Q'&Ceil(month(temporärdatum)/3) & ' ' &Year(temporärdatum), 
-			 num(QuarterStart(temporärdatum)) )  					as [$(_calendarPrefix)År-kvartal],
-		if(temporärdatum  > (if(len('$(vL.sublib.kalender.idag)')=0, today(), date('$(vL.sublib.kalender.idag)'))), 'Framtid', 'Historik') as [Historik/Framtid]
-		;
-	LOAD
-		Date('$(_minKalenderdatum)') + RecNo()-1 AS temporärdatum
-	AUTOGENERATE 
-		Date('$(_maxKalenderdatum)') - Date('$(_minKalenderdatum)') + 1;
-
-
-	SET vL.SetModifier.CleanCalender = År, Månad, Datum, [År-månad],Veckodag,Vecka,Kvartal,[År-kvartal], [Historik/Framtid];
-
-	
-	// Year To Date Modifier
-	Let vL.SetModifier.YTD = 
-	replace(
-		'$(vL.SetModifier.CleanCalender),
-				År=P({<$(vL.SetModifier.CleanCalender), Datum={''$1''}>}År),
-				Datum = {"<=¤(=Date(''$1''))"}', 
-		'¤', '$');	
-
-
-	// Month 2 Date
-	Let vL.SetModifier.Months2Date = 
-	Replace(
-		'$(vL.SetModifier.CleanCalender),
-				Datum={">=¤(=date(rangemin(monthstart(''$1'',alt($2,0)),date(''$1''))))<=¤(=date(rangemax(monthend(''$1'',alt($2,0)),date(''$1''))))"}',
-		'¤','$');	
-
-
-	//Rensar upp lokala variabler
-	LET vL.sublib.kalender.årmånadformat =;
-	LET vL.sublib.kalender.tabellnamn =;
-	LET _maxKalenderdatum=;
-	LET _minKalenderdatum=;
-ENDSUB  //Kalender
-
-SUB sublib.kalenderfrånfält (vL.sublib.kalender.nyckelfält, _källa, _calendarPrefix)
-
-	// Ta reda på om minmax ska hämtas från specifik resident-tabell, qvd eller textfil.
-	IF len('$(_källa)')=0 THEN
-		SET vL.sublib.kalender.minmaxkälla = ";LOAD FieldValue('$(vL.sublib.kalender.nyckelfält)', recno()) as [$(vL.sublib.kalender.nyckelfält)] 
-										AUTOGENERATE FieldValueCount('$(vL.sublib.kalender.nyckelfält)')";
-        kalender.minmaxtabell:
-		LOAD
-			max([$(vL.sublib.kalender.nyckelfält)])+0 as tempKalender.maxdatum,
-			min([$(vL.sublib.kalender.nyckelfält)])+0 as tempKalender.mindatum	;
-        LOAD 
-        	FieldValue('$(vL.sublib.kalender.nyckelfält)', recno()) as [$(vL.sublib.kalender.nyckelfält)] 
-		AUTOGENERATE FieldValueCount('$(vL.sublib.kalender.nyckelfält)');
-
-	ELSEIF index('$(_källa)', '.') = 0 THEN
-		SET vL.sublib.kalender.minmaxkälla = 'RESIDENT $(_källa)';
-		kalender.minmaxtabell:
-		LOAD
-			max([$(vL.sublib.kalender.nyckelfält)])+0 as tempKalender.maxdatum,
-			min([$(vL.sublib.kalender.nyckelfält)])+0 as tempKalender.mindatum	
-        RESIDENT $(_källa);
-
-	ELSEIF '.qvd' = lower(right('$(_källa)', 4)) THEN
-		SET vL.sublib.kalender.minmaxkälla = 'FROM $(_källa) (qvd)';
-        kalender.minmaxtabell:
-		LOAD
-			max([$(vL.sublib.kalender.nyckelfält)])+0 as tempKalender.maxdatum,
-			min([$(vL.sublib.kalender.nyckelfält)])+0 as tempKalender.mindatum	
-        FROM $(_källa) (qvd);
-
-	ELSE
-		SET vL.sublib.kalender.minmaxkälla = 'FROM $(_källa)';	// Antar text fil
-        kalender.minmaxtabell:
-		LOAD
-			max([$(vL.sublib.kalender.nyckelfält)])+0 as tempKalender.maxdatum,
-			min([$(vL.sublib.kalender.nyckelfält)])+0 as tempKalender.mindatum	
-        FROM $(_källa);
-
-	ENDIF
-
-	LET vL.sublib.kalender.minmaxkälla =;
-	// Byter ut europeisk decimalseperator  ',' så att qlikview förstår att det är ett värde.
-	LET _maxKalenderdatum = replace(peek('tempKalender.maxdatum'), ',', '.');
-	LET _minKalenderdatum = replace(peek('tempKalender.mindatum'), ',', '.');
-	DROP table kalender.minmaxtabell;
-
-	CALL sublib.kalender( '$(_minKalenderdatum)','$(_maxKalenderdatum)','$(vL.sublib.kalender.nyckelfält)', _calendarPrefix )
-	LET _maxKalenderdatum=;
-	LET _minKalenderdatum=;
-ENDSUB
-
-SUB sublib.kalenderlänk(vL.sublib.kalender.faktatabell, vL.sublib.kalender.datumfält, vL.sublib.kalender.datumnyckel, vL.sublib.kalender.linkID)
-/**
-Skapar länkkalender med fälten, 
-[Fält som ska kopplas mot Fakta] - @Param 4
-[Typ av datum] 	- fälten som skickas in i @Param 2 ex ([Fält 1], [Fält 2], [Fält 3]
-[Länkfält till kalender] - @Param 3
-
-@syntax CALL sublib.kalenderlänk(vL.sublib.kalender.faktatabell, vL.sublib.kalender.datumfält, vL.sublib.kalender.datumnyckel, _RowId)
-@Syntax CALL sublib.kalenderlänk('Fact','[Date (Booking)], [Date (Start)]','%DateKey','TransactionID');
-@Param 1 Tabell som innehåller fakta/transaktionsmängd, exempel "Fact"
-@Param 2 Kommaseparerad lista med fält som skall tas från Fact/Transaction för att generera upp länkkalender. 
-		 Fältnamnen blir värden i "Kalender", exempel "Date1, Date2, Date3".
-@Param 3 Fältnamn som skall kopplas mot masterkalender - exempel, "%DateKey"
-@Param 4 Fältnamn som skall kopplas mot fakta/transaktionsmängd, exempel "TransactionID"
-
-*/
-    [Kalenderlänk]:
-    CROSSTABLE([Kalender], $(vL.sublib.kalender.datumnyckel), 1)
-    LOAD DISTINCT
-			$(vL.sublib.kalender.linkID),
- 	    $(vL.sublib.kalender.datumfält)
-		RESIDENT 
-			[$(vL.sublib.kalender.faktatabell)]
-    ;
-ENDSUB
-///$tab sublib.kalender.test
-SUB sublib.kalender.test
-
-LOAD floor(rand()*720+yearstart(today())) as %testdatum
-AutoGenerate 365;
-
-Call sublib.kalenderfrånfält('%testdatum')
-ENDSUB //sublib.kalender.test
-///$tab sublib.logg
- /**
- Loggfunktioner som sparar ned info om 
- - Start 
- - Sluttid
- - Rubrik
- - Beskrivning
- */      
-    SUB sublib.logg.start (_sublib.logg.loggrubrik, _sublib.logg.loggbeskrivning)
-    /**
-    Startar en nytt loggförfarande
-    @param1 [Valfri] Rubrik för loggrad som ska sparas
-    @param2 [Valfri] Beskrivning för loggrad som ska sparas
-    */
-    	
-        /*Skapar eller adderar +1 till vL.sublib.logg.loggnivå för varje iteration*/
-        if isnull(TableNumber('LoggEvent')) OR isnull(vL.sublib.logg.loggnivå) then
-        LET vL.sublib.logg.loggnivå= 1;
-        else 
-        	vL.sublib.logg.loggnivå=vL.sublib.logg.loggnivå+1;
-		endif
-		LoggEvent:
-      	LOAD 
-        	AutoNumberHash256(now(),'$(_sublib.logg.loggrubrik)') as [Logg-ID],
-            $(vL.sublib.logg.loggnivå) as [Loggnivå],
-            '$(_sublib.logg.loggrubrik)' as [Loggrubrik],
-          	'$(_sublib.logg.loggbeskrivning)' as Loggbeskrivning,
-          	Now() as [Logg starttid],
-          	Timestamp(null()) as [Logg stoptid]
-      	AutoGenerate 1;
-        SET _sublib.logg.loggrubrik=;
-        SET _sublib.logg.loggbeskrivning=;
-  	ENDSUB //logg.start
-
-  	SUB sublib.logg.stop
-    /**
-    Stänger senast öppnade loggrad. Loggraden får med detta anropet en [Logg stoptid]
-    */
-		TmpLoggEvent:      
-       	NoConcatenate
-      	LOAD
-        	[Logg-ID],
-          	[Loggnivå], 
-          	[Loggrubrik], 
-          	Loggbeskrivning,
-          	[Logg starttid], 
-          	timestamp(now()) as [Logg stoptid]
-      	Resident LoggEvent 
-      	Where 
-          	[Loggnivå] = $(vL.sublib.logg.loggnivå) 
-          	AND isnull( [Logg stoptid]);
-      	Concatenate LOAD 
-          	[Logg-ID],
-          	[Loggnivå],
-          	[Loggrubrik],
-          	Loggbeskrivning,
-          	[Logg starttid],
-          	timestamp([Logg stoptid]) as [Logg stoptid]
-      Resident 
-          LoggEvent
-      Where 
-          NOT ( 
-              [Loggnivå] = $(vL.sublib.logg.loggnivå) 
-              AND isnull( [Logg stoptid])
-              )
-      ;
-  DROP table LoggEvent;
-  RENAME Table TmpLoggEvent to LoggEvent;
-  
-  /*
-  	Nollställer eller reducerar -1 till vL.sublib.logg.loggnivå för varje iteration.
-    Nollställning görs för att undvika att variabel följer med in till applikationen efter att applikationen körts klart.
-    OBS: Om inte alla start har stängts med ett stop så kommer variabeln ligga kvar med ett värde.
-  */
-  IF  vL.sublib.logg.loggnivå = 1 then
-  	SET vL.sublib.logg.loggnivå =;
-  ELSE 
-  	LET vL.sublib.logg.loggnivå= vL.sublib.logg.loggnivå-1; //alt(vL.sublib.logg.loggnivå-1, 0);
-  ENDIF
-  SET _sublib.logg.loggrubrik=;
-  ENDSUB //logg.stop
-  
-///$tab sublib.logg.test
-SUB sublib.logg.test  
-call sublib.logg.start('Livet','Loggar hela livet')
-  sleep(1000);
-  
-  call sublib.logg.start('Barndommen')
-    sleep(1000);
-    
-    call sublib.logg.start('Förskoletiden')
-    sleep(1000);
-    call sublib.logg.stop
-    call sublib.logg.start('Skoltiden')
-        call sublib.logg.start('Grundskoletiden','Åk 1-9')
-          sleep(9000);
-        call sublib.logg.stop  //Stop loop A3 iteration
-      
-      For i=1 to 3 step 1
-        call sublib.logg.start('Gymnasiet','Åk $(i)')
-          sleep(1000);
-        call sublib.logg.stop  //Stop loop A3 iteration
-      next i
-      SET i=; //Nollställer loopvariabel
-      
-    call sublib.logg.stop
-  call sublib.logg.stop
-  Sleep(2000); //Arbetslös mellan skola och jobb. En period som inte loggas explicit.
-  call sublib.logg.start('Jobbarlivet')
-    sleep(5000);
-  call sublib.logg.stop
-  call sublib.logg.start('Pensionistlivet')
-    sleep(5000);
-  call sublib.logg.stop
-  
-call sublib.logg.stop
-  call sublib.logg.start('Döden')
-/** Färg som ändras beroende på Loggnivå i gränssnitt*/
-SET vL.logg.bgcolor = Pick(Loggnivå, Red(), Blue(), Yellow(200), Yellow(100), Blue(75), Blue(50), Blue(25));
-ENDSUB //test-sublib-logg
 ///$tab sublib.rapport
 SUB sublib.rapport (_tabell,_konto,_enhet)
 	/**
@@ -547,29 +251,321 @@ LEFT JOIN  LOAD Datum, Bolag, Konto, Bolag&'|'&Konto as %rapport_Konto Resident 
 
 RR:
 LOAD 'ACME' as Bolag, * inline [
-Rubrik, 				Rapportradsdefinition,	Format,		Fet,		Bakgrund,Teckenstil,Textfärg,Justera,Teckenstorlek,Kommentar
-Försäljning,			3000..3999,				"# ##0 kr",	"",			,,,,,
-Kostnad såld vara,		4000..5999,				"# ##0 kr",	"",,,,,,
-Bruttoresultat,			Försäljning+Kostnad såld vara,"# ##0 kr",<bold>,yellow(125)
-Försäljningskostnader, 	6000..6999,				"# ##0 kr",	
-Varukostnader,			4000..4499+4500..4999,	"# ##0 kr",,,,QlikTechblue(),,,
-Administrationskostnader,7200,					"# ##0 kr"
-Rörelseresultat, 		Bruttoresultat+ 6000..7200,"# ##0 kr",<bold>,yellow(125)
-Rörelsemarginal, 		Rörelseresultat/Försäljning,"# ##0%",<bold>,yellow(200),		 <italic>
-Finansiella intäkter, 	8300..8399,				"# ##0 kr"
-Finansiella kostnader,	8400..8499,				"# ##0 kr"
-Resultat efter finansiella poster,Rörelseresultat+ 8300..8499,"# ##0 kr",<bold>
-Inkomstskatt, 			8900..8999,				"# ##0 kr"
-Resultat, 				Resultat efter finansiella poster+Inkomstskatt,"# ##0 kr",<bold>,yellow(125)
+Rubrik,           Rapportradsdefinition,Format,		Fet, Bakgrund,Teckenstil,Textfärg,Justera,Teckenstorlek,Kommentar
+Försäljning,      3000..3999,           "# ##0 kr", "",  "green(13)",,,,,
+Kostnad såld vara,4000..5999,           "# ##0 kr", "",  "green(13)",,,,,
+Bruttoresultat,   Försäljning+Kostnad såld vara,"# ##0 kr",<bold>,yellow(125)
+Försäljningskostnader,6000..6999,       "# ##0 kr", "",	  "blue(13)"	
+Varukostnader,    4000..4499+4500..4999,"# ##0 kr", "",   "blue(13)",,QlikTechblue(),,,
+Administrationskostnader,7200,          "# ##0 kr", "",	  "blue(13)"	
+Rörelseresultat,  Bruttoresultat+ 6000..7200,"# ##0 kr",<bold>,yellow(125)
+Rörelsemarginal,  Rörelseresultat/Försäljning,"# ##0%",<bold>,yellow(200),		 <italic>
+Finansiella intäkter,8300..8399,        "# ##0 kr", "",    "Magenta(13)"
+Finansiella kostnader,8400..8499,       "# ##0 kr", "", "Magenta(13)"
+Resultat efter finansiella poster,Rörelseresultat+ 8300..8499,"# ##0 kr",<bold>,yellow(200),	
+Inkomstskatt,     8900..8999,           "# ##0 kr", "",  cyan(13)
+Resultat,         Resultat efter finansiella poster+Inkomstskatt,"# ##0 kr",<bold>,yellow(125)
 
 
 ];
 CALL sublib.rapport ('RR','Konto', 'Bolag')
-///$tab RUN
-//CALL sublib.kalender.test
+///$tab sublib.kalender
+SUB sublib.kalender (_minKalenderdatum, _maxKalenderdatum, _kalendernyckelfält, _calendarPrefix)
+/**
+Skapa kalender från ett angett min- och max-datum
+
+@version 2021-07-30
+@Param 1 Obligatoriskt. [Minsta kalenderdatum] Det datum där kalendern ska börja.
+@Param 2 Obligatoriskt. Det datum kalendern sk sluta
+@Param 3 Valfri. Namn på nyckelfält som inehåller heltalsrepresentationen av kalenderdagen.
+@Param 4 Valfri. Ett prefix som identifierer både kalendertabell och fältnamn. Default är <blank>
+@variable IN vL.sublib.kalender.årmånadformat Det format som År-månad-fältet ska presenteras i. Default='YYYY MMM'.
+@variable IN vL.sublib.kalender.tabellnamn Namn på kalendertabell. Evt. prefix angett som @param 4 tillkommer i slutgiltig tabellnam.
+@variable IN vL.sublib.kalender.idag Brytpunkt mellan historik och framtid.  Default=today().
+
+*/
+	/*
+	* Konfigurering av kalenderparametrar
+	*/
+	LET vL.sublib.kalender.årmånadformat = if(len('$(vL.sublib.kalender.årmånadformat)')=0, 'YYYY MMM', vL.sublib.kalender.årmånadformat);
+	LET vL.sublib.kalender.tabellnamn = if(len('$(vL.sublib.kalender.tabellnamn)')=0, 'Kalender', vL.sublib.kalender.tabellnamn);
+	LET vL.sublib.kalender.idag= ;
+	LET FirstMonthOfYear= if(len('$(FirstMonthOfYear)')=0, 1, FirstMonthOfYear);
+    LET ReferenceDay= if(len('$(ReferenceDay)')=0, 1, ReferenceDay);
+    LET BrokenWeeks= if(len('$(BrokenWeeks)')=0, 1, BrokenWeeks);
+    LET FirstWeekDay= if(len('$(FirstWeekDay)')=0, 1, FirstWeekDay);
+	/*
+	* Stadfäster nyckelfält i kalendern. 
+	* Använder @param3 _kalendernyckelfält, om ej definierat så används fältnamnet [%datum] .
+	*/
+	IF 	len(_kalendernyckelfält)>0 then
+		SET _kalendernyckelfält = $(_kalendernyckelfält);
+	ELSE
+		SET _kalendernyckelfält = %datum;
+	ENDIF 
+	
+	/* 
+	* Skapar kalendertabell
+	*/
+	[$(_calendarPrefix)$(vL.sublib.kalender.tabellnamn)]:
+	NOCONCATENATE LOAD      
+		num( temporärdatum) 										as [$(_kalendernyckelfält)] ,
+		Date(temporärdatum) 										as [$(_calendarPrefix)Datum],
+		weekday(temporärdatum, $(FirstWeekDay)) 					as [$(_calendarPrefix)Veckodag],
+		YearName(temporärdatum,0,$(FirstMonthOfYear)) 				as [$(_calendarPrefix)År],
+		dual(week([temporärdatum],$(FirstWeekDay) ,$(BrokenWeeks),$(ReferenceDay)),
+			 week(addmonths(temporärdatum,1-$(FirstMonthOfYear)),$(FirstWeekDay) ,$(BrokenWeeks),$(ReferenceDay))
+			) 														as [$(_calendarPrefix)Vecka],
+		
+        DUAL(Month(temporärdatum) ,  
+			 num(Month(MonthName(temporärdatum, +1- $(FirstMonthOfYear))))
+			)														as [$(_calendarPrefix)Månad],
+            
+		dual(date(MonthName(temporärdatum), '$(vL.sublib.kalender.årmånadformat)'),
+			 MonthStart(temporärdatum)) 							as [$(_calendarPrefix)År-månad],
+		'Q'&Num(Ceil(Num(Month(temporärdatum))/3)) 					as [$(_calendarPrefix)Kvartal],
+		Dual('Q'&Ceil(month(temporärdatum)/3) & ' ' &Year(temporärdatum), 
+			 num(QuarterStart(temporärdatum)) )  					as [$(_calendarPrefix)År-kvartal],
+		if(temporärdatum  > (if(len('$(vL.sublib.kalender.idag)')=0, today(), date('$(vL.sublib.kalender.idag)'))), 'Framtid', 'Historik') as [Historik/Framtid]
+		;
+	LOAD
+		Date('$(_minKalenderdatum)') + RecNo()-1 AS temporärdatum
+	AUTOGENERATE 
+		Date('$(_maxKalenderdatum)') - Date('$(_minKalenderdatum)') + 1;
+
+
+	SET vL.SetModifier.CleanCalender = År, Månad, Datum, [År-månad],Veckodag,Vecka,Kvartal,[År-kvartal], [Historik/Framtid];
+
+	
+	// Year To Date Modifier
+	Let vL.SetModifier.YTD = 
+	replace(
+		'$(vL.SetModifier.CleanCalender),
+				År=P({<$(vL.SetModifier.CleanCalender), Datum={''$1''}>}År),
+				Datum = {"<=¤(=Date(''$1''))"}', 
+		'¤', '$');	
+
+
+	// Month 2 Date
+	Let vL.SetModifier.Months2Date = 
+	Replace(
+		'$(vL.SetModifier.CleanCalender),
+				Datum={">=¤(=date(rangemin(monthstart(''$1'',alt($2,0)),date(''$1''))))<=¤(=date(rangemax(monthend(''$1'',alt($2,0)),date(''$1''))))"}',
+		'¤','$');	
+
+
+	//Rensar upp lokala variabler
+	LET vL.sublib.kalender.årmånadformat =;
+	LET vL.sublib.kalender.tabellnamn =;
+	LET _maxKalenderdatum=;
+	LET _minKalenderdatum=;
+ENDSUB  //Kalender
+
+SUB sublib.kalenderfrånfält (vL.sublib.kalender.nyckelfält, _källa, _calendarPrefix)
+
+	// Ta reda på om minmax ska hämtas från specifik resident-tabell, qvd eller textfil.
+	IF len('$(_källa)')=0 THEN
+		SET vL.sublib.kalender.minmaxkälla = ";LOAD FieldValue('$(vL.sublib.kalender.nyckelfält)', recno()) as [$(vL.sublib.kalender.nyckelfält)] 
+										AUTOGENERATE FieldValueCount('$(vL.sublib.kalender.nyckelfält)')";
+        kalender.minmaxtabell:
+		LOAD
+			max([$(vL.sublib.kalender.nyckelfält)])+0 as tempKalender.maxdatum,
+			min([$(vL.sublib.kalender.nyckelfält)])+0 as tempKalender.mindatum	;
+        LOAD 
+        	FieldValue('$(vL.sublib.kalender.nyckelfält)', recno()) as [$(vL.sublib.kalender.nyckelfält)] 
+		AUTOGENERATE FieldValueCount('$(vL.sublib.kalender.nyckelfält)');
+
+	ELSEIF index('$(_källa)', '.') = 0 THEN
+		SET vL.sublib.kalender.minmaxkälla = 'RESIDENT $(_källa)';
+		kalender.minmaxtabell:
+		LOAD
+			max([$(vL.sublib.kalender.nyckelfält)])+0 as tempKalender.maxdatum,
+			min([$(vL.sublib.kalender.nyckelfält)])+0 as tempKalender.mindatum	
+        RESIDENT $(_källa);
+
+	ELSEIF '.qvd' = lower(right('$(_källa)', 4)) THEN
+		SET vL.sublib.kalender.minmaxkälla = 'FROM $(_källa) (qvd)';
+        kalender.minmaxtabell:
+		LOAD
+			max([$(vL.sublib.kalender.nyckelfält)])+0 as tempKalender.maxdatum,
+			min([$(vL.sublib.kalender.nyckelfält)])+0 as tempKalender.mindatum	
+        FROM $(_källa) (qvd);
+
+	ELSE
+		SET vL.sublib.kalender.minmaxkälla = 'FROM $(_källa)';	// Antar text fil
+        kalender.minmaxtabell:
+		LOAD
+			max([$(vL.sublib.kalender.nyckelfält)])+0 as tempKalender.maxdatum,
+			min([$(vL.sublib.kalender.nyckelfält)])+0 as tempKalender.mindatum	
+        FROM $(_källa);
+
+	ENDIF
+
+	LET vL.sublib.kalender.minmaxkälla =;
+	// Byter ut europeisk decimalseperator  ',' så att qlikview förstår att det är ett värde.
+	LET _maxKalenderdatum = replace(peek('tempKalender.maxdatum'), ',', '.');
+	LET _minKalenderdatum = replace(peek('tempKalender.mindatum'), ',', '.');
+	DROP table kalender.minmaxtabell;
+
+	CALL sublib.kalender( '$(_minKalenderdatum)','$(_maxKalenderdatum)','$(vL.sublib.kalender.nyckelfält)', _calendarPrefix )
+	LET _maxKalenderdatum=;
+	LET _minKalenderdatum=;
+ENDSUB
+
+SUB sublib.kalenderlänk(vL.sublib.kalender.faktatabell, vL.sublib.kalender.datumfält, vL.sublib.kalender.datumnyckel, vL.sublib.kalender.linkID)
+/**
+Skapar länkkalender med fälten, 
+[Fält som ska kopplas mot Fakta] - @Param 4
+[Typ av datum] 	- fälten som skickas in i @Param 2 ex ([Fält 1], [Fält 2], [Fält 3]
+[Länkfält till kalender] - @Param 3
+
+@syntax CALL sublib.kalenderlänk(vL.sublib.kalender.faktatabell, vL.sublib.kalender.datumfält, vL.sublib.kalender.datumnyckel, _RowId)
+@Syntax CALL sublib.kalenderlänk('Fact','[Date (Booking)], [Date (Start)]','%DateKey','TransactionID');
+@Param 1 Tabell som innehåller fakta/transaktionsmängd, exempel "Fact"
+@Param 2 Kommaseparerad lista med fält som skall tas från Fact/Transaction för att generera upp länkkalender. 
+		 Fältnamnen blir värden i "Kalender", exempel "Date1, Date2, Date3".
+@Param 3 Fältnamn som skall kopplas mot masterkalender - exempel, "%DateKey"
+@Param 4 Fältnamn som skall kopplas mot fakta/transaktionsmängd, exempel "TransactionID"
+
+*/
+    [Kalenderlänk]:
+    CROSSTABLE([Kalender], $(vL.sublib.kalender.datumnyckel), 1)
+    LOAD DISTINCT
+			$(vL.sublib.kalender.linkID),
+ 	    $(vL.sublib.kalender.datumfält)
+		RESIDENT 
+			[$(vL.sublib.kalender.faktatabell)]
+    ;
+ENDSUB
+///$tab sublib.kalender.test
+LOAD floor(rand()*720+yearstart(today())) as %testdatum
+AutoGenerate 365;
+
+Call sublib.kalenderfrånfält('%testdatum')
+
+
+///$tab sublib.logg
+ /**
+ Loggfunktioner som sparar ned info om 
+ - Start 
+ - Sluttid
+ - Rubrik
+ - Beskrivning
+ */      
+    SUB sublib.logg.start (_sublib.logg.loggrubrik, _sublib.logg.loggbeskrivning)
+    /**
+    Startar en nytt loggförfarande
+    @param1 [Valfri] Rubrik för loggrad som ska sparas
+    @param2 [Valfri] Beskrivning för loggrad som ska sparas
+    */
+    	
+        /*Skapar eller adderar +1 till vL.sublib.logg.loggnivå för varje iteration*/
+        if isnull(TableNumber('LoggEvent')) OR isnull(vL.sublib.logg.loggnivå) then
+        LET vL.sublib.logg.loggnivå= 1;
+        else 
+        	vL.sublib.logg.loggnivå=vL.sublib.logg.loggnivå+1;
+		endif
+		LoggEvent:
+      	LOAD 
+        	AutoNumberHash256(now(),'$(_sublib.logg.loggrubrik)') as [Logg-ID],
+            $(vL.sublib.logg.loggnivå) as [Loggnivå],
+            '$(_sublib.logg.loggrubrik)' as [Loggrubrik],
+          	'$(_sublib.logg.loggbeskrivning)' as Loggbeskrivning,
+          	Now() as [Logg starttid],
+          	Timestamp(null()) as [Logg stoptid]
+      	AutoGenerate 1;
+        SET _sublib.logg.loggrubrik=;
+        SET _sublib.logg.loggbeskrivning=;
+  	ENDSUB //logg.start
+
+  	SUB sublib.logg.stop
+    /**
+    Stänger senast öppnade loggrad. Loggraden får med detta anropet en [Logg stoptid]
+    */
+		TmpLoggEvent:      
+       	NoConcatenate
+      	LOAD
+        	[Logg-ID],
+          	[Loggnivå], 
+          	[Loggrubrik], 
+          	Loggbeskrivning,
+          	[Logg starttid], 
+          	timestamp(now()) as [Logg stoptid]
+      	Resident LoggEvent 
+      	Where 
+          	[Loggnivå] = $(vL.sublib.logg.loggnivå) 
+          	AND isnull( [Logg stoptid]);
+      	Concatenate LOAD 
+          	[Logg-ID],
+          	[Loggnivå],
+          	[Loggrubrik],
+          	Loggbeskrivning,
+          	[Logg starttid],
+          	timestamp([Logg stoptid]) as [Logg stoptid]
+      Resident 
+          LoggEvent
+      Where 
+          NOT ( 
+              [Loggnivå] = $(vL.sublib.logg.loggnivå) 
+              AND isnull( [Logg stoptid])
+              )
+      ;
+  DROP table LoggEvent;
+  RENAME Table TmpLoggEvent to LoggEvent;
   
-//CALL sublib.logg.test
+  /*
+  	Nollställer eller reducerar -1 till vL.sublib.logg.loggnivå för varje iteration.
+    Nollställning görs för att undvika att variabel följer med in till applikationen efter att applikationen körts klart.
+    OBS: Om inte alla start har stängts med ett stop så kommer variabeln ligga kvar med ett värde.
+  */
+  IF  vL.sublib.logg.loggnivå = 1 then
+  	SET vL.sublib.logg.loggnivå =;
+  ELSE 
+  	LET vL.sublib.logg.loggnivå= vL.sublib.logg.loggnivå-1; //alt(vL.sublib.logg.loggnivå-1, 0);
+  ENDIF
+  SET _sublib.logg.loggrubrik=;
+  ENDSUB //logg.stop
+///$tab sublib.logg.test
+  
+call sublib.logg.start('Livet','Loggar hela livet')
+  sleep(1000);
+  
+  call sublib.logg.start('Barndommen')
+    sleep(1000);
+    
+    call sublib.logg.start('Förskoletiden')
+    sleep(1000);
+    call sublib.logg.stop
+    call sublib.logg.start('Skoltiden')
+        call sublib.logg.start('Grundskoletiden','Åk 1-9')
+          sleep(9000);
+        call sublib.logg.stop  //Stop loop A3 iteration
+      
+      For i=1 to 3 step 1
+        call sublib.logg.start('Gymnasiet','Åk $(i)')
+          sleep(1000);
+        call sublib.logg.stop  //Stop loop A3 iteration
+      next i
+      SET i=; //Nollställer loopvariabel
+      
+    call sublib.logg.stop
+  call sublib.logg.stop
+  Sleep(2000); //Arbetslös mellan skola och jobb. En period som inte loggas explicit.
+  call sublib.logg.start('Jobbarlivet')
+    sleep(5000);
+  call sublib.logg.stop
+  call sublib.logg.start('Pensionistlivet')
+    sleep(5000);
+  call sublib.logg.stop
+  
+call sublib.logg.stop
+  call sublib.logg.start('Döden')
+/** Färg som ändras beroende på Loggnivå i gränssnitt*/
+SET vL.logg.bgcolor = Pick(Loggnivå, Red(), Blue(), Yellow(200), Yellow(100), Blue(75), Blue(50), Blue(25));
+
+///$tab RUN
+
 ///$tab _gitoqlok
 /**
-** Last Updated at 8/28/2022, 2:46:04 PM: sublib.kalende.test [%_OBJECTS_%%_SCRIPT_%] (Vegar at 8/28/2022, 2:32:13 PM)
+** Last Updated at 11/22/2022, 10:35:31 PM: Update sublib.rapport.test.qvs (GitHub at 11/22/2022, 8:49:18 PM)
 */

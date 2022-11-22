@@ -1,0 +1,15 @@
+{
+  "qInfo": {
+    "qId": "25867967-6bb4-4f17-a2f5-3206d1f9dbcf",
+    "qType": "variable"
+  },
+  "qMetaDef": {},
+  "qName": "vL.logg.bgcolor",
+  "qNumberPresentation": {
+    "qType": "U",
+    "qnDec": 10,
+    "qUseThou": 0
+  },
+  "qDefinition": "Pick(Loggnivå, Red(), Blue(), Yellow(200), Yellow(100), Blue(75), Blue(50), Blue(25))",
+  "qIsScriptCreated": true
+}

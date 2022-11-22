@@ -24,6 +24,20 @@
     ]
   },
   {
+    "qName": "%testdatum",
+    "qTags": [
+      "$key",
+      "$numeric",
+      "$integer",
+      "$timestamp",
+      "$date"
+    ],
+    "qSrcTables": [
+      "Rapport_Konto-3",
+      "Kalender"
+    ]
+  },
+  {
     "qName": "Bakgrund_Konto",
     "qTags": [
       "$numeric",
@@ -56,11 +70,11 @@
   {
     "qName": "Datum",
     "qTags": [
-      "$text",
-      "$ascii"
+      "$key"
     ],
     "qSrcTables": [
-      "Transaktioner"
+      "Transaktioner",
+      "Kalender"
     ]
   },
   {
@@ -80,6 +94,16 @@
     ],
     "qSrcTables": [
       "Rapportstyling Konto"
+    ]
+  },
+  {
+    "qName": "Historik/Framtid",
+    "qTags": [
+      "$text",
+      "$ascii"
+    ],
+    "qSrcTables": [
+      "Kalender"
     ]
   },
   {
@@ -113,12 +137,90 @@
     ]
   },
   {
+    "qName": "Kvartal",
+    "qTags": [
+      "$text",
+      "$ascii"
+    ],
+    "qSrcTables": [
+      "Kalender"
+    ]
+  },
+  {
     "qName": "Kvotdel_Konto",
     "qTags": [
       "$text"
     ],
     "qSrcTables": [
       "Rapport_Konto"
+    ]
+  },
+  {
+    "qName": "Logg starttid",
+    "qTags": [
+      "$numeric",
+      "$timestamp"
+    ],
+    "qSrcTables": [
+      "LoggEvent"
+    ]
+  },
+  {
+    "qName": "Logg stoptid",
+    "qTags": [
+      "$numeric",
+      "$timestamp"
+    ],
+    "qSrcTables": [
+      "LoggEvent"
+    ]
+  },
+  {
+    "qName": "Logg-ID",
+    "qTags": [
+      "$numeric",
+      "$integer"
+    ],
+    "qSrcTables": [
+      "LoggEvent"
+    ]
+  },
+  {
+    "qName": "Loggbeskrivning",
+    "qTags": [
+      "$text"
+    ],
+    "qSrcTables": [
+      "LoggEvent"
+    ]
+  },
+  {
+    "qName": "Loggnivå",
+    "qTags": [
+      "$numeric",
+      "$integer"
+    ],
+    "qSrcTables": [
+      "LoggEvent"
+    ]
+  },
+  {
+    "qName": "Loggrubrik",
+    "qTags": [
+      "$text"
+    ],
+    "qSrcTables": [
+      "LoggEvent"
+    ]
+  },
+  {
+    "qName": "Månad",
+    "qTags": [
+      "$numeric",
+      "$integer"
+    ],
+    "qSrcTables": [
+      "Kalender"
     ]
   },
   {
@@ -174,6 +276,62 @@
     "qTags": [],
     "qSrcTables": [
       "Rapportstyling Konto"
+    ]
+  },
+  {
+    "qName": "Vecka",
+    "qTags": [
+      "$numeric",
+      "$integer"
+    ],
+    "qSrcTables": [
+      "Kalender"
+    ]
+  },
+  {
+    "qName": "Veckodag",
+    "qTags": [
+      "$numeric",
+      "$integer"
+    ],
+    "qSrcTables": [
+      "Kalender"
+    ]
+  },
+  {
+    "qName": "År",
+    "qTags": [
+      "$numeric",
+      "$integer",
+      "$timestamp",
+      "$date"
+    ],
+    "qSrcTables": [
+      "Kalender"
+    ]
+  },
+  {
+    "qName": "År-kvartal",
+    "qTags": [
+      "$numeric",
+      "$integer",
+      "$timestamp",
+      "$date"
+    ],
+    "qSrcTables": [
+      "Kalender"
+    ]
+  },
+  {
+    "qName": "År-månad",
+    "qTags": [
+      "$numeric",
+      "$integer",
+      "$timestamp",
+      "$date"
+    ],
+    "qSrcTables": [
+      "Kalender"
     ]
   }
 ]

@@ -1,0 +1,15 @@
+{
+  "qInfo": {
+    "qId": "98f92d27-edfa-42af-b9b3-99b570374d9a",
+    "qType": "variable"
+  },
+  "qMetaDef": {},
+  "qName": "_StylingField_Teckenstorlek",
+  "qNumberPresentation": {
+    "qType": "U",
+    "qnDec": 10,
+    "qUseThou": 0
+  },
+  "qDefinition": "[Teckenstorlek]",
+  "qIsScriptCreated": true
+}

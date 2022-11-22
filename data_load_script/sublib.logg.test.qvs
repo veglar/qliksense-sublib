@@ -1,5 +1,5 @@
 ///$tab sublib.logg.test
-SUB sublib.logg.test  
+  
 call sublib.logg.start('Livet','Loggar hela livet')
   sleep(1000);
   
@@ -35,4 +35,3 @@ call sublib.logg.stop
   call sublib.logg.start('Döden')
 /** Färg som ändras beroende på Loggnivå i gränssnitt*/
 SET vL.logg.bgcolor = Pick(Loggnivå, Red(), Blue(), Yellow(200), Yellow(100), Blue(75), Blue(50), Blue(25));
-ENDSUB //test-sublib-logg

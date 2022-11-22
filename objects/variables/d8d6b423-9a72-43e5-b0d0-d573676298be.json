@@ -1,0 +1,15 @@
+{
+  "qInfo": {
+    "qId": "d8d6b423-9a72-43e5-b0d0-d573676298be",
+    "qType": "variable"
+  },
+  "qMetaDef": {},
+  "qName": "_StylingField_Kommentar",
+  "qNumberPresentation": {
+    "qType": "U",
+    "qnDec": 10,
+    "qUseThou": 0
+  },
+  "qDefinition": "[Kommentar]",
+  "qIsScriptCreated": true
+}

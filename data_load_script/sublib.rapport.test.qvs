@@ -17,20 +17,20 @@ LEFT JOIN  LOAD Datum, Bolag, Konto, Bolag&'|'&Konto as %rapport_Konto Resident 
 
 RR:
 LOAD 'ACME' as Bolag, * inline [
-Rubrik, 				  Rapportradsdefinition,	Format,		Fet,		Bakgrund,Teckenstil,Textfärg,Justera,Teckenstorlek,Kommentar
-Försäljning,			3000..3999,				      "# ##0 kr",	"",			,,,,,
-Kostnad såld vara,4000..5999,				      "# ##0 kr",	"",,,,,,
-Bruttoresultat,		Försäljning+Kostnad såld vara,"# ##0 kr",<bold>,yellow(125)
-Försäljningskostnader, 	6000..6999,				"# ##0 kr",	
-Varukostnader,		4000..4499+4500..4999,	"# ##0 kr",,,,QlikTechblue(),,,
-Administrationskostnader,7200,					  "# ##0 kr"
-Rörelseresultat, 	Bruttoresultat+ 6000..7200,"# ##0 kr",<bold>,yellow(125)
-Rörelsemarginal, 	Rörelseresultat/Försäljning,"# ##0%",<bold>,yellow(200),		 <italic>
-Finansiella intäkter, 	8300..8399,				"# ##0 kr"
-Finansiella kostnader,	8400..8499,				"# ##0 kr"
-Resultat efter finansiella poster,Rörelseresultat+ 8300..8499,"# ##0 kr",<bold>
-Inkomstskatt, 		8900..8999,				      "# ##0 kr"
-Resultat, 				Resultat efter finansiella poster+Inkomstskatt,"# ##0 kr",<bold>,yellow(125)
+Rubrik,           Rapportradsdefinition,Format,		Fet, Bakgrund,Teckenstil,Textfärg,Justera,Teckenstorlek,Kommentar
+Försäljning,      3000..3999,           "# ##0 kr", "",  "green(13)",,,,,
+Kostnad såld vara,4000..5999,           "# ##0 kr", "",  "green(13)",,,,,
+Bruttoresultat,   Försäljning+Kostnad såld vara,"# ##0 kr",<bold>,yellow(125)
+Försäljningskostnader,6000..6999,       "# ##0 kr", "",	  "blue(13)"	
+Varukostnader,    4000..4499+4500..4999,"# ##0 kr", "",   "blue(13)",,QlikTechblue(),,,
+Administrationskostnader,7200,          "# ##0 kr", "",	  "blue(13)"	
+Rörelseresultat,  Bruttoresultat+ 6000..7200,"# ##0 kr",<bold>,yellow(125)
+Rörelsemarginal,  Rörelseresultat/Försäljning,"# ##0%",<bold>,yellow(200),		 <italic>
+Finansiella intäkter,8300..8399,        "# ##0 kr", "",    "Magenta(13)"
+Finansiella kostnader,8400..8499,       "# ##0 kr", "", "Magenta(13)"
+Resultat efter finansiella poster,Rörelseresultat+ 8300..8499,"# ##0 kr",<bold>,yellow(200),	
+Inkomstskatt,     8900..8999,           "# ##0 kr", "",  cyan(13)
+Resultat,         Resultat efter finansiella poster+Inkomstskatt,"# ##0 kr",<bold>,yellow(125)
 
 
 ];
