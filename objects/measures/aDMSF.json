@@ -5,7 +5,7 @@
   },
   "qMeasure": {
     "qLabel": "[Logg starttid]-min(total [Logg starttid])",
-    "qDef": "[Logg starttid]-min(total [Logg starttid])",
+    "qDef": "[sublib.log entry start]-min(total [sublib.log entry start])",
     "qGrouping": "N",
     "qExpressions": [],
     "qActiveExpression": 0,
