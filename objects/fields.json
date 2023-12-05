@@ -156,64 +156,6 @@
     ]
   },
   {
-    "qName": "Logg starttid",
-    "qTags": [
-      "$numeric",
-      "$timestamp"
-    ],
-    "qSrcTables": [
-      "LoggEvent"
-    ]
-  },
-  {
-    "qName": "Logg stoptid",
-    "qTags": [
-      "$numeric",
-      "$timestamp"
-    ],
-    "qSrcTables": [
-      "LoggEvent"
-    ]
-  },
-  {
-    "qName": "Logg-ID",
-    "qTags": [
-      "$numeric",
-      "$integer"
-    ],
-    "qSrcTables": [
-      "LoggEvent"
-    ]
-  },
-  {
-    "qName": "Loggbeskrivning",
-    "qTags": [
-      "$text"
-    ],
-    "qSrcTables": [
-      "LoggEvent"
-    ]
-  },
-  {
-    "qName": "Loggnivå",
-    "qTags": [
-      "$numeric",
-      "$integer"
-    ],
-    "qSrcTables": [
-      "LoggEvent"
-    ]
-  },
-  {
-    "qName": "Loggrubrik",
-    "qTags": [
-      "$text"
-    ],
-    "qSrcTables": [
-      "LoggEvent"
-    ]
-  },
-  {
     "qName": "Månad",
     "qTags": [
       "$numeric",
@@ -296,6 +238,65 @@
     ],
     "qSrcTables": [
       "Kalender"
+    ]
+  },
+  {
+    "qName": "sublib.log entry description",
+    "qTags": [
+      "$text"
+    ],
+    "qSrcTables": [
+      "sublib.log_events"
+    ]
+  },
+  {
+    "qName": "sublib.log entry header",
+    "qTags": [
+      "$text",
+      "$ascii"
+    ],
+    "qSrcTables": [
+      "sublib.log_events"
+    ]
+  },
+  {
+    "qName": "sublib.log entry id",
+    "qTags": [
+      "$numeric",
+      "$integer"
+    ],
+    "qSrcTables": [
+      "sublib.log_events"
+    ]
+  },
+  {
+    "qName": "sublib.log entry level",
+    "qTags": [
+      "$numeric",
+      "$integer"
+    ],
+    "qSrcTables": [
+      "sublib.log_events"
+    ]
+  },
+  {
+    "qName": "sublib.log entry start",
+    "qTags": [
+      "$numeric",
+      "$timestamp"
+    ],
+    "qSrcTables": [
+      "sublib.log_events"
+    ]
+  },
+  {
+    "qName": "sublib.log entry stop",
+    "qTags": [
+      "$numeric",
+      "$timestamp"
+    ],
+    "qSrcTables": [
+      "sublib.log_events"
     ]
   },
   {

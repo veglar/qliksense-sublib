@@ -1,15 +1,15 @@
 {
   "qInfo": {
-    "qId": "30faffd8-b5e1-4800-ae35-82bad37fb51c",
+    "qId": "5b3afb4e-786c-4064-9384-0e3a0d20053d",
     "qType": "variable"
   },
   "qMetaDef": {},
-  "qName": "_StylingField_Bakgrund",
+  "qName": "_StylingField_Textfärg",
   "qNumberPresentation": {
     "qType": "U",
     "qnDec": 10,
     "qUseThou": 0
   },
-  "qDefinition": "[Bakgrund]",
+  "qDefinition": "[Textfärg]",
   "qIsScriptCreated": true
 }

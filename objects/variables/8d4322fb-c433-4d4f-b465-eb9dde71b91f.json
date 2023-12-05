@@ -1,15 +1,15 @@
 {
   "qInfo": {
-    "qId": "b79a8cc8-a193-4663-84fd-72b168b15f53",
+    "qId": "8d4322fb-c433-4d4f-b465-eb9dde71b91f",
     "qType": "variable"
   },
   "qMetaDef": {},
-  "qName": "_StylingField_Justera",
+  "qName": "_StylingField_Teckenstorlek",
   "qNumberPresentation": {
     "qType": "U",
     "qnDec": 10,
     "qUseThou": 0
   },
-  "qDefinition": "[Justera]",
+  "qDefinition": "[Teckenstorlek]",
   "qIsScriptCreated": true
 }

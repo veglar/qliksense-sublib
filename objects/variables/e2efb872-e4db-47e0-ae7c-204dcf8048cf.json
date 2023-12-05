@@ -1,15 +1,15 @@
 {
   "qInfo": {
-    "qId": "1d3a2955-33ea-448a-aae7-f28ee3489301",
+    "qId": "e2efb872-e4db-47e0-ae7c-204dcf8048cf",
     "qType": "variable"
   },
   "qMetaDef": {},
-  "qName": "_StylingField_Textfärg",
+  "qName": "_StylingField_Format",
   "qNumberPresentation": {
     "qType": "U",
     "qnDec": 10,
     "qUseThou": 0
   },
-  "qDefinition": "[Textfärg]",
+  "qDefinition": "[Format]",
   "qIsScriptCreated": true
 }

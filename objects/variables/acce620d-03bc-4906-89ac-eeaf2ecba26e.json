@@ -1,15 +1,15 @@
 {
   "qInfo": {
-    "qId": "98f92d27-edfa-42af-b9b3-99b570374d9a",
+    "qId": "acce620d-03bc-4906-89ac-eeaf2ecba26e",
     "qType": "variable"
   },
   "qMetaDef": {},
-  "qName": "_StylingField_Teckenstorlek",
+  "qName": "_Rapportfält_Rapportrubrik",
   "qNumberPresentation": {
     "qType": "U",
     "qnDec": 10,
     "qUseThou": 0
   },
-  "qDefinition": "[Teckenstorlek]",
+  "qDefinition": "Rubrik",
   "qIsScriptCreated": true
 }

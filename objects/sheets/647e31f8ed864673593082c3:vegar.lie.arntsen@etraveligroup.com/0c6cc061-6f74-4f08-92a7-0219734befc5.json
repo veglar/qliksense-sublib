@@ -77,7 +77,7 @@
               "qDef": {
                 "qGrouping": "N",
                 "qFieldDefs": [
-                  "Logg-ID"
+                  "sublib.log entry id"
                 ],
                 "qFieldLabels": [
                   ""
@@ -149,7 +149,7 @@
               "qDef": {
                 "qGrouping": "N",
                 "qFieldDefs": [
-                  "Loggnivå"
+                  "sublib.log entry level"
                 ],
                 "qFieldLabels": [
                   ""
@@ -221,7 +221,7 @@
               "qDef": {
                 "qGrouping": "N",
                 "qFieldDefs": [
-                  "Loggrubrik"
+                  "sublib.log entry header"
                 ],
                 "qFieldLabels": [
                   ""
@@ -293,7 +293,7 @@
               "qDef": {
                 "qGrouping": "N",
                 "qFieldDefs": [
-                  "Loggbeskrivning"
+                  "sublib.log entry description"
                 ],
                 "qFieldLabels": [
                   ""
@@ -365,7 +365,7 @@
               "qDef": {
                 "qGrouping": "N",
                 "qFieldDefs": [
-                  "Logg starttid"
+                  "sublib.log entry start"
                 ],
                 "qFieldLabels": [
                   ""
@@ -437,7 +437,7 @@
               "qDef": {
                 "qGrouping": "N",
                 "qFieldDefs": [
-                  "Logg stoptid"
+                  "sublib.log entry stop"
                 ],
                 "qFieldLabels": [
                   ""
@@ -512,7 +512,7 @@
                 "qLabel": "Varaktighet",
                 "qTags": [],
                 "qGrouping": "N",
-                "qDef": "max([Logg stoptid])-min([Logg starttid])",
+                "qDef": "max([sublib.log entry stop])-min([sublib.log entry start])",
                 "qNumFormat": {
                   "qType": "IV",
                   "qnDec": 2,
@@ -804,7 +804,7 @@
               "qDef": {
                 "qGrouping": "N",
                 "qFieldDefs": [
-                  "=  dual(Loggrubrik &'|'&Loggbeskrivning,[Logg-ID] )"
+                  "=  dual([sublib.log entry header] &'|'&[sublib.log entry description],[sublib.log entry id] )"
                 ],
                 "qFieldLabels": [
                   ""
@@ -816,7 +816,7 @@
                     "qSortByLoadOrder": 1,
                     "qSortByExpression": 1,
                     "qExpression": {
-                      "qv": "[Logg-ID]"
+                      "qv": "[sublib.log entry id]"
                     }
                   }
                 ],
@@ -915,23 +915,18 @@
               "qDef": {
                 "qTags": [],
                 "qGrouping": "N",
+                "qNumFormat": {
+                  "qType": "U",
+                  "qnDec": 10,
+                  "qUseThou": 0
+                },
                 "qAccumulate": 0,
                 "qActiveExpression": 0,
                 "qExpressions": [],
                 "autoSort": true,
                 "cId": "fRcx",
                 "numFormatFromTemplate": true,
-                "quarantine": {
-                  "qNumFormat": {
-                    "qType": "U",
-                    "qnDec": 10,
-                    "qUseThou": 0,
-                    "qFmt": "",
-                    "qDec": "",
-                    "qThou": ""
-                  },
-                  "isCustomFormatted": false
-                }
+                "isCustomFormatted": false
               },
               "qSortBy": {
                 "qSortByNumeric": -1,

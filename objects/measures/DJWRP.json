@@ -5,7 +5,7 @@
   },
   "qMeasure": {
     "qLabel": "max([Logg stoptid])-min([Logg starttid])",
-    "qDef": "max(alt([Logg stoptid],[Logg starttid]))-min([Logg starttid])",
+    "qDef": "max(alt([sublib.log entry stop],[sublib.log entry start]))-min([sublib.log entry start])",
     "qGrouping": "N",
     "qExpressions": [],
     "qActiveExpression": 0,

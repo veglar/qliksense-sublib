@@ -1,15 +1,15 @@
 {
   "qInfo": {
-    "qId": "61ea7c71-9bc9-43d0-8005-2d67f7361682",
+    "qId": "61433d97-4af2-48e3-9671-1550cb989016",
     "qType": "variable"
   },
   "qMetaDef": {},
-  "qName": "_Rapportfält_Kontodefinition",
+  "qName": "_StylingField_Justera",
   "qNumberPresentation": {
     "qType": "U",
     "qnDec": 10,
     "qUseThou": 0
   },
-  "qDefinition": "Rapportradsdefinition",
+  "qDefinition": "[Justera]",
   "qIsScriptCreated": true
 }
