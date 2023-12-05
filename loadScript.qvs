@@ -559,4 +559,3 @@ call sublib.log.stop
   call sublib.log.stop
 /** Färg som ändras beroende på Loggnivå i gränssnitt*/
 SET vL.logg.bgcolor = Pick(Loggnivå, Red(), Blue(), Yellow(200), Yellow(100), Blue(75), Blue(50), Blue(25));
-///$tab RUN
