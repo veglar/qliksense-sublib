@@ -1,15 +1,15 @@
 {
   "qInfo": {
-    "qId": "1db7916e-a6f0-4580-966f-6992c10f9453",
+    "qId": "a3bdbae5-718f-48b1-b1e0-848d6045b5e9",
     "qType": "variable"
   },
   "qMetaDef": {},
-  "qName": "_Rapportfält_Rapportrubrik",
+  "qName": "_StylingField_Teckenstil",
   "qNumberPresentation": {
     "qType": "U",
     "qnDec": 10,
     "qUseThou": 0
   },
-  "qDefinition": "Rubrik",
+  "qDefinition": "[Teckenstil]",
   "qIsScriptCreated": true
 }

@@ -1,15 +1,15 @@
 {
   "qInfo": {
-    "qId": "61ea7c71-9bc9-43d0-8005-2d67f7361682",
+    "qId": "95425389-488d-47de-a06e-65b598e51385",
     "qType": "variable"
   },
   "qMetaDef": {},
-  "qName": "_Rapportfält_Kontodefinition",
+  "qName": "vL.sublib.logg.loggnivå",
   "qNumberPresentation": {
     "qType": "U",
     "qnDec": 10,
     "qUseThou": 0
   },
-  "qDefinition": "Rapportradsdefinition",
+  "qDefinition": "1",
   "qIsScriptCreated": true
 }

@@ -1,15 +1,15 @@
 {
   "qInfo": {
-    "qId": "30a07b57-072b-4e4c-a9a5-90b165127760",
+    "qId": "5b3afb4e-786c-4064-9384-0e3a0d20053d",
     "qType": "variable"
   },
   "qMetaDef": {},
-  "qName": "_StylingField_Teckenstil",
+  "qName": "_StylingField_Textfärg",
   "qNumberPresentation": {
     "qType": "U",
     "qnDec": 10,
     "qUseThou": 0
   },
-  "qDefinition": "[Teckenstil]",
+  "qDefinition": "[Textfärg]",
   "qIsScriptCreated": true
 }

@@ -1,15 +1,15 @@
 {
   "qInfo": {
-    "qId": "4f8c1bc9-5df8-4642-8ae4-f40dc052969a",
+    "qId": "b6cc8e80-9f4d-4f0e-ac23-0aa2aa1c68b4",
     "qType": "variable"
   },
   "qMetaDef": {},
-  "qName": "_StylingField_Format",
+  "qName": "_Rapportfält_Kontodefinition",
   "qNumberPresentation": {
     "qType": "U",
     "qnDec": 10,
     "qUseThou": 0
   },
-  "qDefinition": "[Format]",
+  "qDefinition": "Rapportradsdefinition",
   "qIsScriptCreated": true
 }

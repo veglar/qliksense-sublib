@@ -1,15 +1,15 @@
 {
   "qInfo": {
-    "qId": "4bb6db8a-ebb2-4a1c-a623-7a7e12b234f2",
+    "qId": "60344c77-f960-42be-8318-e5d94fccc71f",
     "qType": "variable"
   },
   "qMetaDef": {},
-  "qName": "_StylingField_Fet",
+  "qName": "_StylingField_Bakgrund",
   "qNumberPresentation": {
     "qType": "U",
     "qnDec": 10,
     "qUseThou": 0
   },
-  "qDefinition": "[Fet]",
+  "qDefinition": "[Bakgrund]",
   "qIsScriptCreated": true
 }

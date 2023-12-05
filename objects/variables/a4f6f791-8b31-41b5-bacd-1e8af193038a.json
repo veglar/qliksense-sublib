@@ -1,15 +1,15 @@
 {
   "qInfo": {
-    "qId": "d8d6b423-9a72-43e5-b0d0-d573676298be",
+    "qId": "a4f6f791-8b31-41b5-bacd-1e8af193038a",
     "qType": "variable"
   },
   "qMetaDef": {},
-  "qName": "_StylingField_Kommentar",
+  "qName": "_StylingField_Fet",
   "qNumberPresentation": {
     "qType": "U",
     "qnDec": 10,
     "qUseThou": 0
   },
-  "qDefinition": "[Kommentar]",
+  "qDefinition": "[Fet]",
   "qIsScriptCreated": true
 }
