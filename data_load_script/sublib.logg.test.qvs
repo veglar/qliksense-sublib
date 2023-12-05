@@ -1,37 +1,38 @@
 ///$tab sublib.logg.test
   
-call sublib.logg.start('Livet','Loggar hela livet')
-  sleep(1000);
+call sublib.log.start('Life','Log of life')
+  sleep(100);
   
-  call sublib.logg.start('Barndommen')
-    sleep(1000);
+  call sublib.log.start('Childhood')
+    sleep(5000);
     
-    call sublib.logg.start('Förskoletiden')
-    sleep(1000);
-    call sublib.logg.stop
-    call sublib.logg.start('Skoltiden')
-        call sublib.logg.start('Grundskoletiden','Åk 1-9')
-          sleep(9000);
-        call sublib.logg.stop  //Stop loop A3 iteration
+    call sublib.log.start('Pre school era')
+    sleep(5000);
+    call sublib.log.stop
+    call sublib.log.start('School era')
+        call sublib.log.start('Elementary school','Åk 1-9')
+          sleep(8000);
+        call sublib.log.stop  //Stop loop A3 iteration
       
-      For i=1 to 3 step 1
-        call sublib.logg.start('Gymnasiet','Åk $(i)')
+      For i=1 to 2 step 1
+        call sublib.log.start('Secondary school','Year no $(i) of 2')
           sleep(1000);
-        call sublib.logg.stop  //Stop loop A3 iteration
+        call sublib.log.stop  //Stop loop A3 iteration
       next i
       SET i=; //Nollställer loopvariabel
       
-    call sublib.logg.stop
-  call sublib.logg.stop
-  Sleep(2000); //Arbetslös mellan skola och jobb. En period som inte loggas explicit.
-  call sublib.logg.start('Jobbarlivet')
-    sleep(5000);
-  call sublib.logg.stop
-  call sublib.logg.start('Pensionistlivet')
-    sleep(5000);
-  call sublib.logg.stop
+    call sublib.log.stop
+  call sublib.log.stop
+  Sleep(1500); //Unemployed between skola och jobb. No log entry for this period
+  call sublib.log.start('Work life')
+    sleep(10000);
+  call sublib.log.stop
+  call sublib.log.start('Retirement life')
+    sleep(4000);
+  call sublib.log.stop
   
-call sublib.logg.stop
-  call sublib.logg.start('Döden')
+call sublib.log.stop
+  call sublib.log.start('Death')
+  call sublib.log.stop
 /** Färg som ändras beroende på Loggnivå i gränssnitt*/
 SET vL.logg.bgcolor = Pick(Loggnivå, Red(), Blue(), Yellow(200), Yellow(100), Blue(75), Blue(50), Blue(25));

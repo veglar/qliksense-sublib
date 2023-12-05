@@ -1,0 +1,79 @@
+///$tab sublib.log
+ /**
+ Log function saves info about  
+ - Log entry start and stop time 
+ - Log entry header and description
+ - Log entry level (recursive level, will increase if an log entry level is created as a sub section of an other log entry.
+ */      
+    SUB sublib.log.start (_sublib.log.log_header, _sublib.log.log_description)
+    /**
+    Start new log entry
+    @param1 [optional] Log entry header
+    @param2 [optional] Log entry description
+    */
+         /*Skapar eller adderar +1 till sublib.log.log_level för varje iteration*/
+        if isnull(TableNumber('sublib.log_events')) OR isnull(sublib.log.log_level) then
+        LET sublib.log.log_level= 1;
+        else 
+        	sublib.log.log_level=sublib.log.log_level+1;
+		endif
+		[sublib.log_events]:
+      	LOAD 
+        	AutoNumberHash256(now(),'$(_sublib.log.log_header)') as [sublib.log entry id],
+            $(sublib.log.log_level) as [sublib.log entry level],
+            '$(_sublib.log.log_header)' as [sublib.log entry header],
+          	'$(_sublib.log.log_description)' as [sublib.log entry description],
+          	Now() as [sublib.log entry start],
+          	Timestamp(null()) as [sublib.log entry stop]
+      	AutoGenerate 1;
+        SET _sublib.log.log_header=;
+        SET _sublib.log.log_description=;
+  	ENDSUB //logg.start
+
+  	SUB sublib.log.stop
+    /**
+    Closes the latest log entry. When called the log entry field [sublib.log entry stop] will recieve a value.
+    */
+		sublib.temp_log_events:      
+       	NoConcatenate
+      	LOAD
+        	[sublib.log entry id],
+          	[sublib.log entry level], 
+          	[sublib.log entry header], 
+          	[sublib.log entry description],
+          	[sublib.log entry start], 
+          	timestamp(now()) as [sublib.log entry stop]
+      	Resident [sublib.log_events] 
+      	Where 
+          	[sublib.log entry level] = $(sublib.log.log_level) 
+          	AND isnull( [sublib.log entry stop]);
+      	Concatenate LOAD 
+          	[sublib.log entry id],
+          	[sublib.log entry level],
+          	[sublib.log entry header],
+          	[sublib.log entry description],
+          	[sublib.log entry start],
+          	timestamp([sublib.log entry stop]) as [sublib.log entry stop]
+      Resident 
+          [sublib.log_events]
+      Where 
+          NOT ( 
+              [sublib.log entry level] = $(sublib.log.log_level) 
+              AND isnull( [sublib.log entry stop])
+              )
+      ;
+  DROP table [sublib.log_events];
+  RENAME Table sublib.temp_log_events to [sublib.log_events];
+  
+  /*
+  	Nollställer eller reducerar -1 till sublib.log.log_level för varje iteration.
+    Nollställning görs för att undvika att variabel följer med in till applikationen efter att applikationen körts klart.
+    OBS: Om inte alla start har stängts med ett stop så kommer variabeln ligga kvar med ett värde.
+  */
+  IF  sublib.log.log_level = 1 then
+  	SET sublib.log.log_level =;
+  ELSE 
+  	LET sublib.log.log_level= sublib.log.log_level-1; //alt(sublib.log.log_level-1, 0);
+  ENDIF
+  SET _sublib.log.log_header=;
+  ENDSUB //logg.stop
