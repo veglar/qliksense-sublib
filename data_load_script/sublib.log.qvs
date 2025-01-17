@@ -66,9 +66,9 @@
   RENAME Table sublib.temp_log_events to [sublib.log_events];
   
   /*
-  	Nollställer eller reducerar -1 till sublib.log.log_level för varje iteration.
-    Nollställning görs för att undvika att variabel följer med in till applikationen efter att applikationen körts klart.
-    OBS: Om inte alla start har stängts med ett stop så kommer variabeln ligga kvar med ett värde.
+  	Clear or reduce sublib.log.log_level with -1 för each iteration
+    Clearing is done to avoid getting a trace of the variable in the qlik application using this sub
+    OBS: If not all log starts have been closed by a stop then the variable will get into the qlik application with a value
   */
   IF  sublib.log.log_level = 1 then
   	SET sublib.log.log_level =;
