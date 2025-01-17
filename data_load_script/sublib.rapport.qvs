@@ -1,7 +1,7 @@
 ///$tab sublib.rapport
-SUB sublib.rapport (_tabell,_konto,_enhet)
+SUB sublib.report (_tabell,_konto,_enhet)
 	/**
-	Genererar en rapporttabell med rubrik-konto-relation.
+	Genererar en report table med rubrik-konto-relation.
 	För att köra denna funktion behövs en tabell med två eller tre kolumner som innehåller rubrik, definition och evt. nummerformatering.
 
   Stödjer Qlik Sense VizBundle formtatet: https://help.qlik.com/sv-SE/sense/February2021/Subsystems/Hub/Content/Sense_Hub/Visualizations/VisualizationBundle/pl-pivot-chart.htm
@@ -19,76 +19,76 @@ SUB sublib.rapport (_tabell,_konto,_enhet)
  	/* Namnen på fälten i tabellen i parametern _tabell */
   
   	LET _Rapportfält_Rapportrubrik 	= 'Rubrik';  			//'['& FieldName(1, '$(_tabell)') & ']';
-	LET _Rapportfält_Kontodefinition = 'Rapportradsdefinition';  //'['& FieldName(2, '$(_tabell)') & ']';
+	LET _Rapportfält_account_definition = 'Rapportradsdefinition';  //'['& FieldName(2, '$(_tabell)') & ']';
   		
-	LET _StylingField_Format		=IF(FieldNumber('Format',		'$(_tabell)'),'[Format]', 		chr(39)&chr(39));
-	LET _StylingField_Fet 			=IF(FieldNumber('Fet',	 		'$(_tabell)'),'[Fet]', 			chr(39)&chr(39));
-	LET _StylingField_Bakgrund 		=IF(FieldNumber('Bakgrund',		'$(_tabell)'),'[Bakgrund]' , 	chr(39)&chr(39));
-	LET _StylingField_Teckenstil    =IF(FieldNumber('Teckenstil',	'$(_tabell)'),'[Teckenstil]', 	chr(39)&chr(39));   	
-	LET _StylingField_Textfärg      =IF(FieldNumber('Textfärg',	  	'$(_tabell)'),'[Textfärg]',		chr(39)&chr(39));       	
-	LET _StylingField_Justera       =IF(FieldNumber('Justera',	  	'$(_tabell)'),'[Justera]',		chr(39)&chr(39));              
-	LET _StylingField_Teckenstorlek	=IF(FieldNumber('Teckenstorlek','$(_tabell)'),'[Teckenstorlek]',chr(39)&chr(39));                        
-	LET _StylingField_Kommentar	    =IF(FieldNumber('Kommentar',	'$(_tabell)'),'[Kommentar]',	chr(39)&chr(39));         
+	LET _StylingField_Format	=IF(FieldNumber('Format',	 '$(_tabell)'),'[Format]', 		chr(39)&chr(39));
+	LET _StylingField_Bold 		=IF(FieldNumber('Bold',	 	 '$(_tabell)'),'[Bold]', 		chr(39)&chr(39));
+	LET _StylingField_Background=IF(FieldNumber('Background','$(_tabell)'),'[Background]' , 	chr(39)&chr(39));
+	LET _StylingField_fontstyle =IF(FieldNumber('Font style','$(_tabell)'),'[Font style]', 	chr(39)&chr(39));   	
+	LET _StylingField_fontcolor =IF(FieldNumber('Font color','$(_tabell)'),'[Font color]',		chr(39)&chr(39));       	
+	LET _StylingField_adjusment =IF(FieldNumber('Adjustment','$(_tabell)'),'[Adjustment]',		chr(39)&chr(39));              
+	LET _StylingField_fontsize	=IF(FieldNumber('Font size', '$(_tabell)'),'[Font size]',chr(39)&chr(39));                        
+	LET _StylingField_comment	=IF(FieldNumber('Comment',	 '$(_tabell)'),'[Comment]',	chr(39)&chr(39));         
  
-	[Rapportstyling ($(_tabell))]:
+	[Report styling ($(_tabell))]:
   	LOAD 
   		Autonumber([$(_Rapportfält_Rapportrubrik)], 'Styling') as [%rapportstyling ($(_tabell))],
-  		$(_StylingField_Format)        as [Format ($(_tabell))] , 
-		$(_StylingField_Fet)           as [Fet ($(_tabell))] ,                
-		evaluate($(_StylingField_Bakgrund))      as [Bakgrund ($(_tabell))]     ,                  
-		$(_StylingField_Teckenstil)    as [Teckenstil ($(_tabell))]   ,                      
-		alt(evaluate($(_StylingField_Textfärg)),$(_StylingField_Textfärg)   )   as [Textfärg ($(_tabell))]  ,                     
-		$(_StylingField_Justera)       as [Justera ($(_tabell))]     ,                
-		$(_StylingField_Teckenstorlek) as [Teckenstorlek ($(_tabell))],                            
-		$(_StylingField_Kommentar)     as [Kommentar ($(_tabell))] ,
-		[$(_Rapportfält_Rapportrubrik)] &';'& $(_StylingField_Fet)  &';'& $(_StylingField_Bakgrund)   &';'& $(_StylingField_Teckenstil)  &';'& $(_StylingField_Textfärg)  &';'&  $(_StylingField_Justera)   &';'& $(_StylingField_Teckenstorlek)  &';'& $(_StylingField_Kommentar)  as [Rapportstyling ($(_tabell))]
+  		$(_StylingField_Format)                                as [Format ($(_tabell))] , 
+		$(_StylingField_Bold)                                  as [Bold ($(_tabell))] ,                
+		evaluate($(_StylingField_Background))                  as [Background ($(_tabell))]     ,                  
+		$(_StylingField_fontstyle)                             as [Font style ($(_tabell))]   ,                      
+		alt(evaluate($(_StylingField_fontcolor)),$(_StylingField_fontcolor)   )   as [Font color ($(_tabell))]  ,                     
+		$(_StylingField_adjusment)                             as [Adjustment ($(_tabell))]     ,                
+		$(_StylingField_fontsize)                              as [Font size ($(_tabell))],                            
+		$(_StylingField_comment)                               as [Comment ($(_tabell))] ,
+		[$(_Rapportfält_Rapportrubrik)] &';'& $(_StylingField_Bold)  &';'& $(_StylingField_Background)   &';'& $(_StylingField_fontstyle)  &';'& $(_StylingField_fontcolor)  &';'&  $(_StylingField_adjusment)   &';'& $(_StylingField_fontsize)  &';'& $(_StylingField_comment)  as [Report styling ($(_tabell))]
 	Resident 
 		[$(_tabell)]
    	;
 	
     TMP_Rubriksordning:
     LOAD 
-	 AutoNumber('$(_konto)|'&[$(_enhet)]&'|'&[$(_Rapportfält_Rapportrubrik)],'$(_tabell)' ) as [Rubriksordning]
+	 AutoNumber('$(_konto)|'&[$(_enhet)]&'|'&[$(_Rapportfält_Rapportrubrik)],'$(_tabell)' ) as [Header sort order]
     Resident [$(_tabell)];
     
 	Rapport_kvotindelad:
   	/* Läser in nämnare på rader med kvot. Kontorapport stödjer endast en kvot per rad*/	  
   	LOAD 
 		[$(_enhet)] as Rapportorganisationsenhet,
-        AutoNumber('$(_konto)|'&[$(_enhet)]&'|'&[$(_Rapportfält_Rapportrubrik)],'$(_tabell)' ) as [Rubriksordning],
+        AutoNumber('$(_konto)|'&[$(_enhet)]&'|'&[$(_Rapportfält_Rapportrubrik)],'$(_tabell)' ) as [Header sort order],
         
-        //RecNo() as [Rubriksordning],
+        //RecNo() as [Header sort order],
     	[$(_Rapportfält_Rapportrubrik)] ,
-       	subfield(Subfield($(_Rapportfält_Kontodefinition), '/', -1), '+') as [$(_Rapportfält_Kontodefinition)],
+       	subfield(Subfield($(_Rapportfält_account_definition), '/', -1), '+') as [$(_Rapportfält_account_definition)],
     	'Nämnare' as Kvotdel
   	Resident [$(_tabell)]
   	WHERE 
-  		WildMatch($(_Rapportfält_Kontodefinition), '*/*')
+  		WildMatch($(_Rapportfält_account_definition), '*/*')
         
 		;
 
   /* Läser in täljare på rader med kvot. Kontorapport stödjer endast en kvot per rad*/ 
  	LOAD
   		[$(_enhet)] as Rapportorganisationsenhet,
-      	AutoNumber('$(_konto)|'&[$(_enhet)]&'|'&[$(_Rapportfält_Rapportrubrik)],'$(_tabell)' ) as [Rubriksordning],
+      	AutoNumber('$(_konto)|'&[$(_enhet)]&'|'&[$(_Rapportfält_Rapportrubrik)],'$(_tabell)' ) as [Header sort order],
         [$(_Rapportfält_Rapportrubrik)] ,
-     	subfield(Subfield($(_Rapportfält_Kontodefinition), '/', -2), '+') as [$(_Rapportfält_Kontodefinition)],
+     	subfield(Subfield($(_Rapportfält_account_definition), '/', -2), '+') as [$(_Rapportfält_account_definition)],
       	'Täljare' as Kvotdel
   	Resident 
 		[$(_tabell)]
  	WHERE 
- 		WildMatch($(_Rapportfält_Kontodefinition), '*/*')
+ 		WildMatch($(_Rapportfält_account_definition), '*/*')
       ;
 
   	/* Läser in rader utan kvot */
     LOAD 
       	[$(_enhet)] as Rapportorganisationsenhet,
-        AutoNumber('$(_konto)|'&[$(_enhet)]&'|'&[$(_Rapportfält_Rapportrubrik)],'$(_tabell)' ) as [Rubriksordning],
+        AutoNumber('$(_konto)|'&[$(_enhet)]&'|'&[$(_Rapportfält_Rapportrubrik)],'$(_tabell)' ) as [Header sort order],
        	[$(_Rapportfält_Rapportrubrik)] ,
-     	Subfield($(_Rapportfält_Kontodefinition), '+') as [$(_Rapportfält_Kontodefinition)],
+     	Subfield($(_Rapportfält_account_definition), '+') as [$(_Rapportfält_account_definition)],
         'Täljare' as Kvotdel
     Resident [$(_tabell)]
-    WHERE NOT WildMatch($(_Rapportfält_Kontodefinition), '*/*')
+    WHERE NOT WildMatch($(_Rapportfält_account_definition), '*/*')
   
 ;
 	DROP TABLE TMP_Rubriksordning;
@@ -103,13 +103,13 @@ SUB sublib.rapport (_tabell,_konto,_enhet)
       Trace ### $(_Rapportorganisationsenhet)  $(_tabell);
       
       Rapport_hiearchy:
-      Hierarchy ([$(_Rapportfält_Rapportrubrik)], [$(_Rapportfält_Kontodefinition)], NodeName)
+      Hierarchy ([$(_Rapportfält_Rapportrubrik)], [$(_Rapportfält_account_definition)], NodeName)
       LOAD 
           [$(_Rapportfält_Rapportrubrik)], 
-          [$(_Rapportfält_Kontodefinition)], 
-          [$(_Rapportfält_Kontodefinition)] as NodeName, 
+          [$(_Rapportfält_account_definition)], 
+          [$(_Rapportfält_account_definition)] as NodeName, 
           Kvotdel,
-          [Rubriksordning]
+          [Header sort order]
       Resident Rapport_kvotindelad
       WHERE  Rapportorganisationsenhet = '$(_Rapportorganisationsenhet)' ;
 
@@ -128,7 +128,7 @@ SUB sublib.rapport (_tabell,_konto,_enhet)
           subfield(NodeName1, '..', 1) 								as [_KontoFrom],
           subfield(NodeName1, '..', -1) 							as [_KontoTom],
           Kvotdel 													as [Kvotdel ($(_tabell))],
-          [Rubriksordning] 											as [Rapportrad ($(_tabell))]
+          [Header sort order] 											as [Rapportrad ($(_tabell))]
       Resident Rapport_hiearchy
    //   WHERE isnum(subfield(NodeName1, '..', 1))   
       ;
@@ -155,7 +155,7 @@ SUB sublib.rapport (_tabell,_konto,_enhet)
 //           subfield(NodeName1, '..', 1) 								as [_KontoFrom],
 //           subfield(NodeName1, '..', -1) 							as [_KontoTom],
 //           Kvotdel 													as [Kvotdel ($(_tabell))],
-//           [Rubriksordning] 											as [Rapportrad ($(_tabell))],
+//           [Header sort order] 											as [Rapportrad ($(_tabell))],
 //           '$(_Rapportorganisationsenhet)' & '|'& subfield(NodeName1, '..', 1) as [$(_konto)]
 //       Resident Rapport_hiearchy
 //       WHERE NOT isnum(subfield(NodeName1, '..', 1))   
@@ -169,26 +169,26 @@ SUB sublib.rapport (_tabell,_konto,_enhet)
 	sub ConcatReport
 		
 		/** Autoconcatinerar Styling */
-	 	[Rapportstyling $(_konto)]:
+	 	[Report styling $(_konto)]:
 	  	LOAD 
       		[%rapportstyling ($(_tabell))] as [%rapportstyling_$(_konto)],
 	  		MaxString([Format ($(_tabell))]) as [Format_$(_konto)] , 
-			MaxString([Fet ($(_tabell))]) as [Fet_$(_konto)] ,                
-			MaxString([Bakgrund ($(_tabell))]) as [Bakgrund_$(_konto)]     ,                  
-			MaxString([Teckenstil ($(_tabell))]) as [Teckenstil_$(_konto)]   ,                      
-			MaxString([Textfärg ($(_tabell))]) as [Textfärg_$(_konto)]  ,                     
-	    	MaxString([Justera ($(_tabell))]) as [Justera_$(_konto)]     ,                
-			MaxString([Teckenstorlek ($(_tabell))]) as [Teckenstorlek_$(_konto)],                            
-			MaxString([Kommentar ($(_tabell))]) as [Kommentar_$(_konto)] ,
-		  	MaxString([Rapportstyling ($(_tabell))]) as [Rapportstyling_$(_konto)]
+			MaxString([Bold ($(_tabell))]) as [Bold_$(_konto)] ,                
+			MaxString([Background ($(_tabell))]) as [Background_$(_konto)]     ,                  
+			MaxString([Font style ($(_tabell))]) as [Font style_$(_konto)]   ,                      
+			MaxString([Font color ($(_tabell))]) as [Font color_$(_konto)]  ,                     
+	    	MaxString([Adjustment ($(_tabell))]) as [Adjustment_$(_konto)]     ,                
+			MaxString([Font size ($(_tabell))]) as [Font size_$(_konto)],                            
+			MaxString([Comment ($(_tabell))]) as [Comment_$(_konto)] ,
+		  	MaxString([Report styling ($(_tabell))]) as [Report styling_$(_konto)]
 		Resident 
-			[Rapportstyling ($(_tabell))]
+			[Report styling ($(_tabell))]
         group by  [%rapportstyling ($(_tabell))]
 		;
-		Drop table  	[Rapportstyling ($(_tabell))];
+		Drop table  	[Report styling ($(_tabell))];
 
 
-		/** Concatinerar rapporttabell*/
+		/** Concatinerar report table*/
 		IF isnull( NoOfFields ('Rapport_$(_konto)')) then
 			/*Skapar tom tabell som det går att concatenera på.*/
 			[Rapport_$(_konto)]:
