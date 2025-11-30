@@ -4,8 +4,8 @@
     "qType": "measure"
   },
   "qMeasure": {
-    "qLabel": "max([Logg stoptid])-min([Logg starttid])",
-    "qDef": "max(alt([sublib.log entry stop],[sublib.log entry start]))-min([sublib.log entry start])",
+    "qLabel": "Log duration",
+    "qDef": "max(alt([log_end_time],[log_start_time]))-min([log_start_time])",
     "qGrouping": "N",
     "qExpressions": [],
     "qActiveExpression": 0,
@@ -23,7 +23,7 @@
     }
   },
   "qMetaDef": {
-    "title": "max([Logg stoptid])-min([Logg starttid])",
+    "title": "Log duration",
     "description": "",
     "tags": []
   }

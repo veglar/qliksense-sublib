@@ -241,62 +241,71 @@
     ]
   },
   {
-    "qName": "sublib.log entry description",
+    "qName": "log_depth",
+    "qTags": [
+      "$numeric",
+      "$integer"
+    ],
+    "qSrcTables": [
+      "log_event"
+    ]
+  },
+  {
+    "qName": "log_description",
     "qTags": [
       "$text"
     ],
     "qSrcTables": [
-      "sublib.log_events"
+      "log_event"
     ]
   },
   {
-    "qName": "sublib.log entry header",
+    "qName": "log_duration",
+    "qTags": [
+      "$numeric"
+    ],
+    "qSrcTables": [
+      "log_event"
+    ]
+  },
+  {
+    "qName": "log_end_time",
+    "qTags": [
+      "$numeric",
+      "$timestamp"
+    ],
+    "qSrcTables": [
+      "log_event"
+    ]
+  },
+  {
+    "qName": "log_header",
     "qTags": [
       "$text",
       "$ascii"
     ],
     "qSrcTables": [
-      "sublib.log_events"
+      "log_event"
     ]
   },
   {
-    "qName": "sublib.log entry id",
+    "qName": "log_id",
     "qTags": [
       "$numeric",
       "$integer"
     ],
     "qSrcTables": [
-      "sublib.log_events"
+      "log_event"
     ]
   },
   {
-    "qName": "sublib.log entry level",
-    "qTags": [
-      "$numeric",
-      "$integer"
-    ],
-    "qSrcTables": [
-      "sublib.log_events"
-    ]
-  },
-  {
-    "qName": "sublib.log entry start",
+    "qName": "log_start_time",
     "qTags": [
       "$numeric",
       "$timestamp"
     ],
     "qSrcTables": [
-      "sublib.log_events"
-    ]
-  },
-  {
-    "qName": "sublib.log entry stop",
-    "qTags": [
-      "$numeric",
-      "$timestamp"
-    ],
-    "qSrcTables": [
-      "sublib.log_events"
+      "log_event"
     ]
   },
   {

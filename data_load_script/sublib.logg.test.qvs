@@ -1,38 +1,39 @@
 ///$tab sublib.logg.test
   
-call sublib.log.start('Life','Log of life')
+call log_start('Life','Log of life')
   sleep(100);
   
-  call sublib.log.start('Childhood')
+  call log_start('Childhood')
     sleep(5000);
     
-    call sublib.log.start('Pre school era')
+    call log_start('Pre school era')
     sleep(5000);
-    call sublib.log.stop
-    call sublib.log.start('School era')
-        call sublib.log.start('Elementary school','Åk 1-9')
+    call log_end
+    call log_start('School era')
+        call log_start('Elementary school','Åk 1-9')
           sleep(8000);
-        call sublib.log.stop  //Stop loop A3 iteration
+        call log_end  //Stop loop A3 iteration
       
       For i=1 to 2 step 1
-        call sublib.log.start('Secondary school','Year no $(i) of 2')
+        call log_start('Secondary school','Year no $(i) of 2')
           sleep(1000);
-        call sublib.log.stop  //Stop loop A3 iteration
+        call log_end  //Stop loop A3 iteration
       next i
       SET i=; //Nollställer loopvariabel
       
-    call sublib.log.stop
-  call sublib.log.stop
+    call log_end
+  call log_end
+  call log('Between school and work')
   Sleep(1500); //Unemployed between skola och jobb. No log entry for this period
-  call sublib.log.start('Work life')
+  call log_start('Work life')
     sleep(10000);
-  call sublib.log.stop
-  call sublib.log.start('Retirement life')
+  call log_end
+  call log_start('Retirement life')
     sleep(4000);
-  call sublib.log.stop
+  call log_end
   
-call sublib.log.stop
-  call sublib.log.start('Death')
-  call sublib.log.stop
+call log_end
+  call log_start('Death')
+  call log_end
 /** Färg som ändras beroende på Loggnivå i gränssnitt*/
 SET vL.logg.bgcolor = Pick(Loggnivå, Red(), Blue(), Yellow(200), Yellow(100), Blue(75), Blue(50), Blue(25));

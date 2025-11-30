@@ -18,12 +18,12 @@
       {
         "bounds": {
           "y": 50,
-          "x": 8.333333333333332,
-          "width": 62.5,
+          "x": 0,
+          "width": 79.16666666666666,
           "height": 50
         },
-        "col": 2,
-        "colspan": 15,
+        "col": 0,
+        "colspan": 19,
         "name": "mJgdypQ",
         "row": 6,
         "rowspan": 6,
@@ -41,12 +41,12 @@
         "type": "barchart",
         "col": 0,
         "row": 0,
-        "colspan": 17,
+        "colspan": 19,
         "rowspan": 6,
         "bounds": {
           "y": 0,
           "x": 0,
-          "width": 70.83333333333334,
+          "width": 79.16666666666666,
           "height": 50
         }
       }
@@ -77,10 +77,10 @@
               "qDef": {
                 "qGrouping": "N",
                 "qFieldDefs": [
-                  "sublib.log entry id"
+                  "log_id"
                 ],
                 "qFieldLabels": [
-                  ""
+                  "log_id"
                 ],
                 "qSortCriterias": [
                   {
@@ -93,7 +93,7 @@
                 "qNumberPresentations": [],
                 "qActiveField": 0,
                 "autoSort": true,
-                "cId": "PLdc",
+                "cId": "fHQdJK",
                 "othersLabel": "Others",
                 "textAlign": {
                   "auto": true,
@@ -131,28 +131,21 @@
               },
               "qTotalLabel": {},
               "qCalcCond": {},
-              "qAttributeExpressions": [
-                {
-                  "qExpression": "$(vL.logg.bgcolor)",
-                  "qAttribute": true,
-                  "id": "cellBackgroundColor"
-                }
-              ],
+              "qAttributeExpressions": [],
               "qAttributeDimensions": [],
               "qCalcCondition": {
                 "qCond": {},
                 "qMsg": {}
-              },
-              "othersLabel": "Others"
+              }
             },
             {
               "qDef": {
                 "qGrouping": "N",
                 "qFieldDefs": [
-                  "sublib.log entry level"
+                  "log_depth"
                 ],
                 "qFieldLabels": [
-                  ""
+                  "log_depth"
                 ],
                 "qSortCriterias": [
                   {
@@ -165,7 +158,7 @@
                 "qNumberPresentations": [],
                 "qActiveField": 0,
                 "autoSort": true,
-                "cId": "tTmq",
+                "cId": "tsRWJa",
                 "othersLabel": "Others",
                 "textAlign": {
                   "auto": true,
@@ -203,28 +196,21 @@
               },
               "qTotalLabel": {},
               "qCalcCond": {},
-              "qAttributeExpressions": [
-                {
-                  "qExpression": "$(vL.logg.bgcolor)",
-                  "qAttribute": true,
-                  "id": "cellBackgroundColor"
-                }
-              ],
+              "qAttributeExpressions": [],
               "qAttributeDimensions": [],
               "qCalcCondition": {
                 "qCond": {},
                 "qMsg": {}
-              },
-              "othersLabel": "Others"
+              }
             },
             {
               "qDef": {
                 "qGrouping": "N",
                 "qFieldDefs": [
-                  "sublib.log entry header"
+                  "log_header"
                 ],
                 "qFieldLabels": [
-                  ""
+                  "log_header"
                 ],
                 "qSortCriterias": [
                   {
@@ -237,7 +223,7 @@
                 "qNumberPresentations": [],
                 "qActiveField": 0,
                 "autoSort": true,
-                "cId": "rZdjnJ",
+                "cId": "ANtjMU",
                 "othersLabel": "Others",
                 "textAlign": {
                   "auto": true,
@@ -275,28 +261,21 @@
               },
               "qTotalLabel": {},
               "qCalcCond": {},
-              "qAttributeExpressions": [
-                {
-                  "qExpression": "$(vL.logg.bgcolor)",
-                  "qAttribute": true,
-                  "id": "cellBackgroundColor"
-                }
-              ],
+              "qAttributeExpressions": [],
               "qAttributeDimensions": [],
               "qCalcCondition": {
                 "qCond": {},
                 "qMsg": {}
-              },
-              "othersLabel": "Others"
+              }
             },
             {
               "qDef": {
                 "qGrouping": "N",
                 "qFieldDefs": [
-                  "sublib.log entry description"
+                  "log_description"
                 ],
                 "qFieldLabels": [
-                  ""
+                  "log_description"
                 ],
                 "qSortCriterias": [
                   {
@@ -309,7 +288,7 @@
                 "qNumberPresentations": [],
                 "qActiveField": 0,
                 "autoSort": true,
-                "cId": "BXmUgmy",
+                "cId": "ZBZFGDZ",
                 "othersLabel": "Others",
                 "textAlign": {
                   "auto": true,
@@ -347,28 +326,21 @@
               },
               "qTotalLabel": {},
               "qCalcCond": {},
-              "qAttributeExpressions": [
-                {
-                  "qExpression": "$(vL.logg.bgcolor)",
-                  "qAttribute": true,
-                  "id": "cellBackgroundColor"
-                }
-              ],
+              "qAttributeExpressions": [],
               "qAttributeDimensions": [],
               "qCalcCondition": {
                 "qCond": {},
                 "qMsg": {}
-              },
-              "othersLabel": "Others"
+              }
             },
             {
               "qDef": {
                 "qGrouping": "N",
                 "qFieldDefs": [
-                  "sublib.log entry start"
+                  "log_start_time"
                 ],
                 "qFieldLabels": [
-                  ""
+                  "log_start_time"
                 ],
                 "qSortCriterias": [
                   {
@@ -381,7 +353,7 @@
                 "qNumberPresentations": [],
                 "qActiveField": 0,
                 "autoSort": true,
-                "cId": "JNBPBrJ",
+                "cId": "GTJFKJr",
                 "othersLabel": "Others",
                 "textAlign": {
                   "auto": true,
@@ -419,28 +391,21 @@
               },
               "qTotalLabel": {},
               "qCalcCond": {},
-              "qAttributeExpressions": [
-                {
-                  "qExpression": "$(vL.logg.bgcolor)",
-                  "qAttribute": true,
-                  "id": "cellBackgroundColor"
-                }
-              ],
+              "qAttributeExpressions": [],
               "qAttributeDimensions": [],
               "qCalcCondition": {
                 "qCond": {},
                 "qMsg": {}
-              },
-              "othersLabel": "Others"
+              }
             },
             {
               "qDef": {
                 "qGrouping": "N",
                 "qFieldDefs": [
-                  "sublib.log entry stop"
+                  "log_end_time"
                 ],
                 "qFieldLabels": [
-                  ""
+                  "log_end_time"
                 ],
                 "qSortCriterias": [
                   {
@@ -453,7 +418,7 @@
                 "qNumberPresentations": [],
                 "qActiveField": 0,
                 "autoSort": true,
-                "cId": "XnKBm",
+                "cId": "LSyjmGa",
                 "othersLabel": "Others",
                 "textAlign": {
                   "auto": true,
@@ -491,19 +456,77 @@
               },
               "qTotalLabel": {},
               "qCalcCond": {},
-              "qAttributeExpressions": [
-                {
-                  "qExpression": "$(vL.logg.bgcolor)",
-                  "qAttribute": true,
-                  "id": "cellBackgroundColor"
-                }
-              ],
+              "qAttributeExpressions": [],
               "qAttributeDimensions": [],
               "qCalcCondition": {
                 "qCond": {},
                 "qMsg": {}
+              }
+            },
+            {
+              "qDef": {
+                "qGrouping": "N",
+                "qFieldDefs": [
+                  "log_duration"
+                ],
+                "qFieldLabels": [
+                  ""
+                ],
+                "qSortCriterias": [
+                  {
+                    "qSortByNumeric": 1,
+                    "qSortByAscii": 1,
+                    "qSortByLoadOrder": 1,
+                    "qExpression": {}
+                  }
+                ],
+                "qNumberPresentations": [],
+                "qActiveField": 0,
+                "autoSort": true,
+                "cId": "TJvnXcB",
+                "othersLabel": "Others",
+                "textAlign": {
+                  "auto": true,
+                  "align": "left"
+                },
+                "representation": {
+                  "type": "text",
+                  "urlPosition": "dimension",
+                  "urlLabel": "",
+                  "linkUrl": "",
+                  "imageSetting": "label",
+                  "imageLabel": "",
+                  "imageUrl": "",
+                  "imageSize": "fitHeight",
+                  "imagePosition": "topCenter"
+                }
               },
-              "othersLabel": "Others"
+              "qOtherTotalSpec": {
+                "qOtherMode": "OTHER_OFF",
+                "qOtherCounted": {
+                  "qv": "10"
+                },
+                "qOtherLimit": {
+                  "qv": "0"
+                },
+                "qOtherLimitMode": "OTHER_GE_LIMIT",
+                "qForceBadValueKeeping": true,
+                "qApplyEvenWhenPossiblyWrongResult": true,
+                "qOtherSortMode": "OTHER_SORT_DESCENDING",
+                "qTotalMode": "TOTAL_OFF",
+                "qReferencedExpression": {}
+              },
+              "qOtherLabel": {
+                "qv": "Others"
+              },
+              "qTotalLabel": {},
+              "qCalcCond": {},
+              "qAttributeExpressions": [],
+              "qAttributeDimensions": [],
+              "qCalcCondition": {
+                "qCond": {},
+                "qMsg": {}
+              }
             }
           ],
           "qMeasures": [
@@ -512,7 +535,7 @@
                 "qLabel": "Varaktighet",
                 "qTags": [],
                 "qGrouping": "N",
-                "qDef": "max([sublib.log entry stop])-min([sublib.log entry start])",
+                "qDef": "max([log_end_time])-min([log_start_time])",
                 "qNumFormat": {
                   "qType": "IV",
                   "qnDec": 2,
@@ -640,6 +663,7 @@
             2,
             5,
             4,
+            7,
             6
           ],
           "qSuppressMissing": true,
@@ -669,7 +693,8 @@
             3,
             4,
             5,
-            6
+            6,
+            7
           ],
           "qExpansionState": [],
           "qDynamicScript": [],
@@ -680,7 +705,8 @@
             3,
             4,
             5,
-            6
+            6,
+            7
           ],
           "columnWidths": [
             67,
@@ -689,6 +715,7 @@
             116,
             123,
             122,
+            -1,
             97
           ],
           "qLayoutExclude": {
@@ -804,7 +831,7 @@
               "qDef": {
                 "qGrouping": "N",
                 "qFieldDefs": [
-                  "=  dual([sublib.log entry header] &'|'&[sublib.log entry description],[sublib.log entry id] )"
+                  "=  dual([log_header] &'|'&[log_description],[log_id] )"
                 ],
                 "qFieldLabels": [
                   ""

@@ -444,118 +444,151 @@ AutoGenerate 365;
 Call sublib.kalenderfrånfält('%testdatum')
 ///$tab sublib.log
  /**
- Log function saves info about  
- - Log entry start and stop time 
- - Log entry header and description
- - Log entry level (recursive level, will increase if an log entry level is created as a sub section of an other log entry.
+ Log functions that save info about:
+ - Start 
+ - End time
+ - Header
+ - Description
  */      
-    SUB sublib.log.start (_sublib.log.log_header, _sublib.log.log_description)
-    /**
-    Start new log entry
-    @param1 [optional] Log entry header
-    @param2 [optional] Log entry description
-    */
-         /*Skapar eller adderar +1 till sublib.log.log_level för varje iteration*/
-        if isnull(TableNumber('sublib.log_events')) OR isnull(sublib.log.log_level) then
-        LET sublib.log.log_level= 1;
-        else 
-        	sublib.log.log_level=sublib.log.log_level+1;
-		endif
-		[sublib.log_events]:
+    SUB log (_log_header, _log_description)
+	/*
+	    Single line logging
+	*/
+		if isnull(TableNumber('log_event')) OR isnull(log_depth) then
+	        LET log_depth= 1;
+	    else 
+	      	log_depth=log_depth;
+	    endif
+	    
+		log_event:
       	LOAD 
-        	AutoNumberHash256(now(),'$(_sublib.log.log_header)') as [sublib.log entry id],
-            $(sublib.log.log_level) as [sublib.log entry level],
-            '$(_sublib.log.log_header)' as [sublib.log entry header],
-          	'$(_sublib.log.log_description)' as [sublib.log entry description],
-          	Now() as [sublib.log entry start],
-          	Timestamp(null()) as [sublib.log entry stop]
+        	rowno() as log_id,
+        	$(log_depth) as [log_depth],
+            '$(_log_header)' as [log_header],
+          	'$(_log_description)' as [log_description],
+          	Now() as [log_start_time],
+          	Now() as [log_end_time],
+          	0 as log_duration
       	AutoGenerate 1;
-        SET _sublib.log.log_header=;
-        SET _sublib.log.log_description=;
-  	ENDSUB //logg.start
-
-  	SUB sublib.log.stop
+	
+    ENDSUB
+    
+    
+    
+    SUB log_start (_log_header, _log_description)
     /**
-    Closes the latest log entry. When called the log entry field [sublib.log entry stop] will recieve a value.
+    Starts a new logging procedure
+    @param1 [Optional] Header for the log row to be saved
+    @param2 [Optional] Description for the log row to be saved
     */
-		sublib.temp_log_events:      
-       	NoConcatenate
-      	LOAD
-        	[sublib.log entry id],
-          	[sublib.log entry level], 
-          	[sublib.log entry header], 
-          	[sublib.log entry description],
-          	[sublib.log entry start], 
-          	timestamp(now()) as [sublib.log entry stop]
-      	Resident [sublib.log_events] 
-      	Where 
-          	[sublib.log entry level] = $(sublib.log.log_level) 
-          	AND isnull( [sublib.log entry stop]);
-      	Concatenate LOAD 
-          	[sublib.log entry id],
-          	[sublib.log entry level],
-          	[sublib.log entry header],
-          	[sublib.log entry description],
-          	[sublib.log entry start],
-          	timestamp([sublib.log entry stop]) as [sublib.log entry stop]
-      Resident 
-          [sublib.log_events]
-      Where 
-          NOT ( 
-              [sublib.log entry level] = $(sublib.log.log_level) 
-              AND isnull( [sublib.log entry stop])
-              )
-      ;
-  DROP table [sublib.log_events];
-  RENAME Table sublib.temp_log_events to [sublib.log_events];
-  
-  /*
-  	Clear or reduce sublib.log.log_level with -1 för each iteration
-    Clearing is done to avoid getting a trace of the variable in the qlik application using this sub
-    OBS: If not all log starts have been closed by a stop then the variable will get into the qlik application with a value
-  */
-  IF  sublib.log.log_level = 1 then
-  	SET sublib.log.log_level =;
-  ELSE 
-  	LET sublib.log.log_level= sublib.log.log_level-1; //alt(sublib.log.log_level-1, 0);
-  ENDIF
-  SET _sublib.log.log_header=;
-  ENDSUB //logg.stop
+    	
+    /*Creates or adds +1 to log_depth for each iteration*/
+    if isnull(TableNumber('log_event')) OR isnull(log_depth) then
+        LET log_depth= 1;
+    else 
+      	log_depth=log_depth+1;
+    endif
+        log_event:
+      	LOAD 
+        	rowno() as log_id,
+        	//AutoNumberHash256(now(),'$(_log_header)') as [log_id],
+            $(log_depth) as [log_depth],
+            '$(_log_header)' as [log_header],
+          	'$(_log_description)' as [log_description],
+          	Now() as [log_start_time],
+          	Timestamp(null()) as [log_end_time],
+          	interval(null()) as log_duration
+      	AutoGenerate 1;
+        SET _log_header=;
+        SET _log_description=;
+  	ENDSUB //log_start
+
+  	SUB log_end
+	    /**
+	    Closes the last opened log row. This call adds a [log_end_time] to the row.
+	    */
+	     tmp_log_event:      
+	    	NoConcatenate
+	   	LOAD
+	     	[log_id],
+	       	[log_depth], 
+	       	[log_header], 
+	       	[log_description],
+	       	[log_start_time], 
+	       	timestamp(now()) as [log_end_time],
+	       	timestamp(now()) - 	[log_start_time] as log_duration
+	   	Resident log_event 
+	   	Where 
+	       	[log_depth] = $(log_depth) 
+	       	AND isnull( [log_end_time]);
+	       	
+	   	Concatenate LOAD 
+	       	[log_id],
+	       	[log_depth],
+	       	[log_header],
+	       	[log_description],
+	       	[log_start_time],
+	       	timestamp([log_end_time]) as [log_end_time],
+	       	log_duration
+	   Resident 
+	       log_event
+	   Where 
+	       NOT ( 
+	           [log_depth] = $(log_depth) 
+	           AND isnull( [log_end_time])
+	           )
+	   ;
+	  DROP table log_event;
+	  RENAME Table tmp_log_event to log_event;
+	  
+	  /*
+	  	Resets or reduces log_depth by -1 for each iteration.
+	    Resetting is done to avoid the variable remaining in the application after execution.
+	    NOTE: If not all starts are closed with a stop, the variable will remain with a value.
+	  */
+	  IF  log_depth = 1 then
+	  	SET log_depth =;
+	  ELSE 
+	  	LET log_depth= log_depth-1; //alt(log_depth-1, 0);
+	  ENDIF
+	  SET _log_header=;
+  ENDSUB //log_end
 ///$tab sublib.logg.test
   
-call sublib.log.start('Life','Log of life')
+call log_start('Life','Log of life')
   sleep(100);
   
-  call sublib.log.start('Childhood')
+  call log_start('Childhood')
     sleep(5000);
     
-    call sublib.log.start('Pre school era')
+    call log_start('Pre school era')
     sleep(5000);
-    call sublib.log.stop
-    call sublib.log.start('School era')
-        call sublib.log.start('Elementary school','Åk 1-9')
+    call log_end
+    call log_start('School era')
+        call log_start('Elementary school','Åk 1-9')
           sleep(8000);
-        call sublib.log.stop  //Stop loop A3 iteration
+        call log_end  //Stop loop A3 iteration
       
       For i=1 to 2 step 1
-        call sublib.log.start('Secondary school','Year no $(i) of 2')
+        call log_start('Secondary school','Year no $(i) of 2')
           sleep(1000);
-        call sublib.log.stop  //Stop loop A3 iteration
+        call log_end  //Stop loop A3 iteration
       next i
       SET i=; //Nollställer loopvariabel
       
-    call sublib.log.stop
-  call sublib.log.stop
+    call log_end
+  call log_end
+  call log('Between school and work')
   Sleep(1500); //Unemployed between skola och jobb. No log entry for this period
-  call sublib.log.start('Work life')
+  call log_start('Work life')
     sleep(10000);
-  call sublib.log.stop
-  call sublib.log.start('Retirement life')
+  call log_end
+  call log_start('Retirement life')
     sleep(4000);
-  call sublib.log.stop
+  call log_end
   
-call sublib.log.stop
-  call sublib.log.start('Death')
-  call sublib.log.stop
+call log_end
+  call log_start('Death')
+  call log_end
 /** Färg som ändras beroende på Loggnivå i gränssnitt*/
 SET vL.logg.bgcolor = Pick(Loggnivå, Red(), Blue(), Yellow(200), Yellow(100), Blue(75), Blue(50), Blue(25));

@@ -20,12 +20,12 @@
         "type": "auto-chart",
         "col": 0,
         "row": 0,
-        "colspan": 9,
+        "colspan": 12,
         "rowspan": 3,
         "bounds": {
           "y": 0,
           "x": 0,
-          "width": 37.5,
+          "width": 50,
           "height": 25
         }
       },
@@ -34,12 +34,12 @@
         "type": "table",
         "col": 0,
         "row": 3,
-        "colspan": 9,
+        "colspan": 12,
         "rowspan": 8,
         "bounds": {
           "y": 25,
           "x": 0,
-          "width": 37.5,
+          "width": 50,
           "height": 66.66666666666666
         }
       }
